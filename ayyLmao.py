@@ -1,1 +1,1 @@
-print('hello world') 'I know you are working for the chinese goverment LMAO'
+print('hello world. I know you are working for the chinese goverment LMAO')
