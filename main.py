@@ -3,6 +3,9 @@ import json
 with open('steam.json', 'r') as file:
     data = []
     oldData = json.load(file)
-    for x in oldData:
-        data.append(x)
-    print(data[0]['name'])
+
+# Variabele maken voor de informatie in json file
+appid = [x['appid'] for x in oldData]
+name = [x['name'] for x in oldData]
+release_date = [x['release_date'] for x in oldData]
+...
