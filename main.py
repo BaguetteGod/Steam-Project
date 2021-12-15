@@ -9,3 +9,7 @@ appid = [x['appid'] for x in oldData]
 name = [x['name'] for x in oldData]
 release_date = [x['release_date'] for x in oldData]
 # ...
+
+def sort(list):
+    return sorted(list)
+
