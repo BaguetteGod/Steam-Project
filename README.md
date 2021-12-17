@@ -1,8 +1,10 @@
+
 <p align="center">
-	<img src="./assets/header_logo.png">
+	<img src=/assets/header_logo.png>
 	<br><br>	
 </p>
 
+# Steam Project Team-1
 ## Projectbeschrijving
 Met dit project geven wij door middel van een grafische weergave, 
 inzicht in het gaming gedrag van je vrienden op het platform Steam. 
