@@ -10,11 +10,11 @@ ASSETS_PATH = OUTPUT_PATH / Path("./assets")
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
-boolDic = {
-    'mpClicked' : True,
-    'planClicked' : False,
-    'recomClicked' : False,
-    'friendClicked' : False
+activeWindow = {
+    'mpActive' : True,
+    'planActive' : False,
+    'recomActive' : False,
+    'friendActive' : False
 }
 
 #Button events
@@ -23,76 +23,76 @@ def resetButtons():
     canvas.itemconfig(planningButton, image=planningImage)
     canvas.itemconfig(recomButton, image=recomImage)
     canvas.itemconfig(friendsButton, image=friendsImage)
-    boolDic['mpClicked'] = False
-    boolDic['planClicked'] = False
-    boolDic['recomClicked'] = False
-    boolDic['friendClicked'] = False
+    activeWindow['mpActive'] = False
+    activeWindow['planActive'] = False
+    activeWindow['recomActive'] = False
+    activeWindow['friendActive'] = False
 
 
 def mostPlayed(event):
     resetButtons()
-    boolDic['mpClicked'] = True
+    activeWindow['mpActive'] = True
     canvas.itemconfig(mpButton, image=mpSelected)
 
 def planning(event):
     resetButtons()
-    boolDic['planClicked'] = True
+    activeWindow['planActive'] = True
     canvas.itemconfig(planningButton, image=planningSelected)
 
 def recommended(event):
     resetButtons()
-    boolDic['recomClicked'] = True
+    activeWindow['recomActive'] = True
     canvas.itemconfig(recomButton, image=recomSelected)
 
 def friends(event):
     resetButtons()
-    boolDic['friendClicked'] = True
+    activeWindow['friendActive'] = True
     canvas.itemconfig(friendsButton, image=friendSelected)
 
 def mpHoverEnter(event):
-    if boolDic['mpClicked'] == True:
+    if activeWindow['mpActive'] == True:
         return
     else:
         canvas.itemconfig(mpButton, image=mpHover)
 
 def mpHoverLeave(event):
-    if boolDic['mpClicked'] == True:
+    if activeWindow['mpActive'] == True:
         return
     else:
         canvas.itemconfig(mpButton, image=mpImage)
 
 def planHoverEnter(event):
-    if boolDic['planClicked'] == True:
+    if activeWindow['planActive'] == True:
         return
     else:
         canvas.itemconfig(planningButton, image=planningHover)
 
 def planHoverLeave(event):
-    if boolDic['planClicked'] == True:
+    if activeWindow['planActive'] == True:
         return
     else:
         canvas.itemconfig(planningButton, image=planningImage)
 
 def recomHoverEnter(event):
-    if boolDic['recomClicked'] == True:
+    if activeWindow['recomActive'] == True:
         return
     else:
         canvas.itemconfig(recomButton, image=recomHover)
 
 def recomHoverLeave(event):
-    if boolDic['recomClicked'] == True:
+    if activeWindow['recomActive'] == True:
         return
     else:
         canvas.itemconfig(recomButton, image=recomImage)
 
 def friendHoverEnter(event):
-    if boolDic['friendClicked'] == True:
+    if activeWindow['friendActive'] == True:
         return
     else:
         canvas.itemconfig(friendsButton, image=friendHover)
 
 def friendHoverLeave(event):
-    if boolDic['friendClicked'] == True:
+    if activeWindow['friendActive'] == True:
         return
     else:
         canvas.itemconfig(friendsButton, image=friendsImage)

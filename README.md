@@ -1,4 +1,17 @@
-Dit project is gemaakt door de volgende studenten:
+## Projectbeschrijving
+Met dit project geven wij door middel van een grafische weergave, 
+inzicht in het gaming gedrag van je vrienden op het platform Steam. 
+
+
+## Instructies
+### Steam GUI:
+Gebruik de toetsencombinatie 'ctrl+shift+f10' of klik op run in Pycharm om de GUI te starten.
+
+### Main:
+Kies welke data je wilt sorteren, roep de functie 'sort(var)' met de variabele van je keuze aan, run main
+
+
+## Auteurs
 Naam:           Bram Stoppelsteen
 Studentnummer:  1767216
 Username:       Bram Stoppelsteen
@@ -14,16 +27,3 @@ Username:       ACNiC03
 Naam:           Mika van Milligen
 Studentnummer:  1805187
 Username:       BaguetteGod
-
-
-[Projectbeschrijving]
-Met dit project geven wij door middel van een grafische weergave, 
-inzicht in het gaming gedrag van je vrienden op het platform Steam. 
-
-
-[Instructies]
-steamGUI:
-Gebruik de toetsencombinatie 'ctrl+shift+f10' of klik op run om de GUI te starten.
-
-main:
-Kies welke data je wilt sorteren, roep de functie 'sort(var)' met de variabele van je keuze aan, run main
