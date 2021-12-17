@@ -1,6 +1,6 @@
 
 <p align="center">
-	<img src=/assets/header_logo.png>
+	<img src="https://res.cloudinary.com/dkc8p5dbh/image/upload/v1639734742/ProjectB/header_logo_dephnb.png" alt="">
 	<br><br>	
 </p>
 
