@@ -1,3 +1,8 @@
+<p align="center">
+	<img src="./assets/header_logo.png">
+	<br><br>	
+</p>
+
 ## Projectbeschrijving
 Met dit project geven wij door middel van een grafische weergave, 
 inzicht in het gaming gedrag van je vrienden op het platform Steam. 
@@ -12,18 +17,18 @@ Kies welke data je wilt sorteren, roep de functie 'sort(var)' met de variabele v
 
 
 ## Auteurs
-Naam:           Bram Stoppelsteen
-Studentnummer:  1767216
-Username:       Bram Stoppelsteen
+- Naam:           Bram Stoppelsteen
+  - Studentnummer:  1767216
+  - Username:       Bram Stoppelsteen
 
-Naam:           Koen Duik
-Studentnummer:  1811340
-Username:       KoenDuik
+- Naam:           Koen Duik
+  - Studentnummer:  1811340
+  - Username:       KoenDuik
 
-Naam:           Ahmet Nicanci
-Studentnummer:  1808990
-Username:       ACNiC03
+- Naam:           Ahmet Nicanci
+  - Studentnummer:  1808990
+  - Username:       ACNiC03
 
-Naam:           Mika van Milligen
-Studentnummer:  1805187
-Username:       BaguetteGod
+- Naam:           Mika van Milligen
+  - Studentnummer:  1805187
+  - Username:       BaguetteGod
