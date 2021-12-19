@@ -1,10 +1,11 @@
 
 <p align="center">
 	<img src="https://res.cloudinary.com/dkc8p5dbh/image/upload/v1639734742/ProjectB/header_logo_dephnb.png" alt="">
-	<br><br>	
 </p>
 
-# Steam Project Team-1
+
+<h1 align="center">Steam Project Team-1</h1>
+
 ## Projectbeschrijving
 Met dit project geven wij door middel van een grafische weergave, 
 inzicht in het gaming gedrag van je vrienden op het platform Steam. 
@@ -19,18 +20,18 @@ Kies welke data je wilt sorteren, roep de functie 'sort(var)' met de variabele v
 
 
 ## Auteurs
-- Naam:           Bram Stoppelsteen
+- Naam:           **Bram Stoppelsteen**
   - Studentnummer:  1767216
   - Username:       Bram Stoppelsteen
 
-- Naam:           Koen Duik
+- Naam:           **Koen Duik**
   - Studentnummer:  1811340
   - Username:       KoenDuik
 
-- Naam:           Ahmet Nicanci
+- Naam:           **Ahmet Nicanci**
   - Studentnummer:  1808990
   - Username:       ACNiC03
 
-- Naam:           Mika van Milligen
+- Naam:           **Mika van Milligen**
   - Studentnummer:  1805187
   - Username:       BaguetteGod
