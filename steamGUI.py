@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path("./assets")
+ASSETS_PATH = OUTPUT_PATH / Path('./assets')
 
 
 def relative_to_assets(path: str) -> Path:
@@ -49,50 +49,51 @@ def friends(event):
     activeWindow['friendActive'] = True
     canvas.itemconfig(friendsButton, image=friendSelected)
 
+
 def mpHoverEnter(event):
-    if activeWindow['mpActive'] == True:
+    if activeWindow['mpActive']:
         return
     else:
         canvas.itemconfig(mpButton, image=mpHover)
 
 def mpHoverLeave(event):
-    if activeWindow['mpActive'] == True:
+    if activeWindow['mpActive']:
         return
     else:
         canvas.itemconfig(mpButton, image=mpImage)
 
 def planHoverEnter(event):
-    if activeWindow['planActive'] == True:
+    if activeWindow['planActive']:
         return
     else:
         canvas.itemconfig(planningButton, image=planningHover)
 
 def planHoverLeave(event):
-    if activeWindow['planActive'] == True:
+    if activeWindow['planActive']:
         return
     else:
         canvas.itemconfig(planningButton, image=planningImage)
 
 def recomHoverEnter(event):
-    if activeWindow['recomActive'] == True:
+    if activeWindow['recomActive']:
         return
     else:
         canvas.itemconfig(recomButton, image=recomHover)
 
 def recomHoverLeave(event):
-    if activeWindow['recomActive'] == True:
+    if activeWindow['recomActive']:
         return
     else:
         canvas.itemconfig(recomButton, image=recomImage)
 
 def friendHoverEnter(event):
-    if activeWindow['friendActive'] == True:
+    if activeWindow['friendActive']:
         return
     else:
         canvas.itemconfig(friendsButton, image=friendHover)
 
 def friendHoverLeave(event):
-    if activeWindow['friendActive'] == True:
+    if activeWindow['friendActive']:
         return
     else:
         canvas.itemconfig(friendsButton, image=friendsImage)
@@ -124,12 +125,12 @@ friendsImage = ImageTk.PhotoImage(Image.open(relative_to_assets('FRIENDS.png')))
 #Create canvas
 canvas = Canvas(
     window,
-    bg="#FFFFFF",
+    bg='#FFFFFF',
     height=768,
     width=1366,
     bd=0,
     highlightthickness=0,
-    relief="ridge"
+    relief='ridge'
 )
 
 #Background Image
