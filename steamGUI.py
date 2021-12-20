@@ -2,7 +2,6 @@ from pathlib import Path
 from tkinter import *
 from PIL import Image, ImageTk
 
-
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path('./assets')
 
@@ -10,14 +9,16 @@ ASSETS_PATH = OUTPUT_PATH / Path('./assets')
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+
 activeWindow = {
-    'mpActive' : True,
-    'planActive' : False,
-    'recomActive' : False,
-    'friendActive' : False
+    'mpActive': True,
+    'planActive': False,
+    'recomActive': False,
+    'friendActive': False
 }
 
-#Button events
+
+# Button click events
 def resetButtons():
     canvas.itemconfig(mpButton, image=mpImage)
     canvas.itemconfig(planningButton, image=planningImage)
@@ -34,15 +35,18 @@ def mostPlayed(event):
     activeWindow['mpActive'] = True
     canvas.itemconfig(mpButton, image=mpSelected)
 
+
 def planning(event):
     resetButtons()
     activeWindow['planActive'] = True
     canvas.itemconfig(planningButton, image=planningSelected)
 
+
 def recommended(event):
     resetButtons()
     activeWindow['recomActive'] = True
     canvas.itemconfig(recomButton, image=recomSelected)
+
 
 def friends(event):
     resetButtons()
@@ -50,11 +54,13 @@ def friends(event):
     canvas.itemconfig(friendsButton, image=friendSelected)
 
 
+# Button hover events
 def mpHoverEnter(event):
     if activeWindow['mpActive']:
         return
     else:
         canvas.itemconfig(mpButton, image=mpHover)
+
 
 def mpHoverLeave(event):
     if activeWindow['mpActive']:
@@ -62,11 +68,13 @@ def mpHoverLeave(event):
     else:
         canvas.itemconfig(mpButton, image=mpImage)
 
+
 def planHoverEnter(event):
     if activeWindow['planActive']:
         return
     else:
         canvas.itemconfig(planningButton, image=planningHover)
+
 
 def planHoverLeave(event):
     if activeWindow['planActive']:
@@ -74,11 +82,13 @@ def planHoverLeave(event):
     else:
         canvas.itemconfig(planningButton, image=planningImage)
 
+
 def recomHoverEnter(event):
     if activeWindow['recomActive']:
         return
     else:
         canvas.itemconfig(recomButton, image=recomHover)
+
 
 def recomHoverLeave(event):
     if activeWindow['recomActive']:
@@ -86,11 +96,13 @@ def recomHoverLeave(event):
     else:
         canvas.itemconfig(recomButton, image=recomImage)
 
+
 def friendHoverEnter(event):
     if activeWindow['friendActive']:
         return
     else:
         canvas.itemconfig(friendsButton, image=friendHover)
+
 
 def friendHoverLeave(event):
     if activeWindow['friendActive']:
@@ -98,13 +110,14 @@ def friendHoverLeave(event):
     else:
         canvas.itemconfig(friendsButton, image=friendsImage)
 
-#Create Window
+
+# Create Window
 window = Tk()
+window.title('Steam')
+window.geometry('1366x768')
+window.configure(bg='#FFFFFF')
 
-window.geometry("1366x768")
-window.configure(bg="#FFFFFF")
-
-#Button vars
+# Button vars
 mpSelected = ImageTk.PhotoImage(Image.open(relative_to_assets('mpSelected.png')))
 mpHover = ImageTk.PhotoImage(Image.open(relative_to_assets('mpHover.png')))
 mpImage = ImageTk.PhotoImage(Image.open(relative_to_assets('MOST PLAYED.png')))
@@ -121,8 +134,7 @@ friendSelected = ImageTk.PhotoImage(Image.open(relative_to_assets('friendSelecte
 friendHover = ImageTk.PhotoImage(Image.open(relative_to_assets('friendHover.png')))
 friendsImage = ImageTk.PhotoImage(Image.open(relative_to_assets('FRIENDS.png')))
 
-
-#Create canvas
+# Create canvas
 canvas = Canvas(
     window,
     bg='#FFFFFF',
@@ -133,7 +145,7 @@ canvas = Canvas(
     relief='ridge'
 )
 
-#Background Image
+# Background Image
 entryBackground = PhotoImage(
     file=relative_to_assets('backgroundImage.png'))
 entry_bg_1 = canvas.create_image(
@@ -142,25 +154,25 @@ entry_bg_1 = canvas.create_image(
     image=entryBackground
 )
 
-#Most played button
+# Most played button
 mpButton = canvas.create_image(135, 65, image=mpSelected, anchor=CENTER)
 canvas.tag_bind(mpButton, '<Button-1>', mostPlayed)
 canvas.tag_bind(mpButton, '<Enter>', mpHoverEnter)
 canvas.tag_bind(mpButton, '<Leave>', mpHoverLeave)
 
-#Planning button
+# Planning button
 planningButton = canvas.create_image(360, 65, image=planningImage, anchor=CENTER)
 canvas.tag_bind(planningButton, '<Button-1>', planning)
 canvas.tag_bind(planningButton, '<Enter>', planHoverEnter)
 canvas.tag_bind(planningButton, '<Leave>', planHoverLeave)
 
-#Recommended button
+# Recommended button
 recomButton = canvas.create_image(600, 65, image=recomImage, anchor=CENTER)
 canvas.tag_bind(recomButton, '<Button-1>', recommended)
 canvas.tag_bind(recomButton, '<Enter>', recomHoverEnter)
 canvas.tag_bind(recomButton, '<Leave>', recomHoverLeave)
 
-#Friends button
+# Friends button
 friendsButton = canvas.create_image(825, 65, image=friendsImage, anchor=CENTER)
 canvas.tag_bind(friendsButton, '<Button-1>', friends)
 canvas.tag_bind(friendsButton, '<Enter>', friendHoverEnter)
