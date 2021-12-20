@@ -24,7 +24,7 @@ Kies welke data je wilt sorteren, roep de functie 'sort(var)' met de variabele v
   - Studentnummer:  1767216
   - Username:       Bram Stoppelsteen
 
-- Naam:           **Koen Duik**
+- Naam:           **Koen Duikersloot**
   - Studentnummer:  1811340
   - Username:       KoenDuik
 
