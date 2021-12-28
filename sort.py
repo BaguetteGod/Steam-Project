@@ -21,7 +21,7 @@ def insertionSort(lst):
     return lstCopy
 
 
-def mergeSort(lst):
+def mergeSort(lst, string):
     lstCopy = lst.copy()
     if len(lstCopy) > 1:
         mid = len(lstCopy) // 2
@@ -29,14 +29,14 @@ def mergeSort(lst):
         L = lstCopy[:mid]
         R = lstCopy[mid:]
         # Sorting the first half
-        mergeSort(L)
+        mergeSort(L, string)
         # Sorting the second half
-        mergeSort(R)
+        mergeSort(R, string)
 
         i = j = k = 0
         # Copy data to temp lists L[] and R[]
         while i < len(L) and j < len(R):
-            if L[i] < R[j]:
+            if L[i][string] < R[j][string]:
                 lstCopy[k] = L[i]
                 i += 1
             else:

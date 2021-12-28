@@ -1,5 +1,6 @@
 import json
 from sort import *
+from search import recBinarySearch
 
 with open('steam.json', 'r') as file:
     oldData = json.load(file)
@@ -25,6 +26,7 @@ median_playtime = [x['median_playtime'] for x in oldData]
 owners = [x['owners'] for x in oldData]
 price = [x['price'] for x in oldData]
 
-# print(selectionSort(name[:50]))
-# print(insertionSort(name[:50]))
-print(mergeSort(name))
+
+newData = mergeSort(oldData, 'name')
+print(recBinarySearch(newData, 'Counter-Strike', 'name'))
+
