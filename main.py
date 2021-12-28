@@ -1,4 +1,5 @@
 import json
+from sort import *
 
 with open('steam.json', 'r') as file:
     oldData = json.load(file)
@@ -24,8 +25,6 @@ median_playtime = [x['median_playtime'] for x in oldData]
 owners = [x['owners'] for x in oldData]
 price = [x['price'] for x in oldData]
 
-# test
-
-
-def sort(list):
-    return sorted(list)
+# print(selectionSort(name[:50]))
+# print(insertionSort(name[:50]))
+print(mergeSort(name))
