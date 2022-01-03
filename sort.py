@@ -1,24 +1,24 @@
-def selectionSort(lst):
+def selectionSort(lst, string):
     lstCopy = lst.copy()
     for i in range(len(lstCopy)):
         minIdx = i
         for j in range(i + 1, len(lstCopy)):
-            if lstCopy[minIdx] > lstCopy[j]:
+            if lstCopy[minIdx][string] > lstCopy[j][string]:
                 minIdx = j
         lstCopy[i], lstCopy[minIdx] = lstCopy[minIdx], lstCopy[i]
     return lstCopy
 
 
-def insertionSort(lst):
-    lstCopy = lst.copy()
-    for i in range(1, len(lstCopy)):
-        key = lstCopy[i]
-        j = i - 1
-        while j >= 0 and key < lstCopy[j]:
-            lstCopy[j + 1] = lstCopy[j]
-            j -= 1
-        lstCopy[j + 1] = key
-    return lstCopy
+# def insertionSort(lst):
+#     lstCopy = lst.copy()
+#     for i in range(1, len(lstCopy)):
+#         key = lstCopy[i]
+#         j = i - 1
+#         while j >= 0 and key < lstCopy[j]:
+#             lstCopy[j + 1] = lstCopy[j]
+#             j -= 1
+#         lstCopy[j + 1] = key
+#     return lstCopy
 
 
 def mergeSort(lst, string):
@@ -29,9 +29,9 @@ def mergeSort(lst, string):
         L = lstCopy[:mid]
         R = lstCopy[mid:]
         # Sorting the first half
-        mergeSort(L, string)
+        L = mergeSort(L, string)
         # Sorting the second half
-        mergeSort(R, string)
+        R = mergeSort(R, string)
 
         i = j = k = 0
         # Copy data to temp lists L[] and R[]
@@ -54,3 +54,4 @@ def mergeSort(lst, string):
             j += 1
             k += 1
     return lstCopy
+
