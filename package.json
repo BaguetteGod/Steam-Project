@@ -1,0 +1,14 @@
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "Steam",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "KBAM",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^16.0.6"
+  }
+}

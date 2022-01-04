@@ -3,7 +3,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path('./assets')
+ASSETS_PATH = OUTPUT_PATH / Path('assets')
 
 
 def relative_to_assets(path: str) -> Path:
@@ -177,6 +177,24 @@ friendsButton = canvas.create_image(825, 65, image=friendsImage, anchor=CENTER)
 canvas.tag_bind(friendsButton, '<Button-1>', friends)
 canvas.tag_bind(friendsButton, '<Enter>', friendHoverEnter)
 canvas.tag_bind(friendsButton, '<Leave>', friendHoverLeave)
+
+
+mostPlayedData = Text(
+    bd=0,
+    bg='#1b2838',
+    highlightthickness=0,
+    font=('Roboto', 18),
+    fg='#FFFFFF',
+    pady=30,
+    padx=30
+)
+mostPlayedData.place(
+    x=683,
+    y=410,
+    anchor=CENTER,
+    width=1366,
+    height=619
+)
 
 canvas.place(x=0, y=0)
 window.resizable(False, False)

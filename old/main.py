@@ -36,6 +36,6 @@ appid = [x['appid'] for x in appidData]
 
 playtimeData = mergeSort(oldData, 'average_playtime')
 average_playtime = [x['average_playtime'] for x in playtimeData]
-print(average_playtime[-5:])
+print(average_playtime[-2:])
 
 
