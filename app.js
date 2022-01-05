@@ -13,6 +13,7 @@ let request = new XMLHttpRequest();
 request.open('GET', 'steam.json', false);
 request.send(null);
 let data = JSON.parse(request.responseText);
+let dataSize = data.length
 
 // Give the navbar highlight effects + show corresponding div
 for (let i = 0; i < navElements.length; i++) {
@@ -82,3 +83,4 @@ for (let i = 0; i < 10; i++) {
     addTitle(data[i].name);
     addInfo(data[i].average_playtime, newTag, data[i].price);
 };
+
