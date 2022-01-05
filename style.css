@@ -201,6 +201,22 @@ footer {
     position: fixed;
 }
 
+#mostplayed {
+    display: flex;
+}
+
+#planning {
+    display: none;
+}
+
+#recommended {
+    display: none;
+}
+
+#friends {
+    display: none;
+}
+
 /* END OF BASIC APP STYLING */
 /* MOST PLAYED STYLING */
 
