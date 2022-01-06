@@ -35,4 +35,16 @@ function mergeSort(arr, string) {
     return arrCopy;
 }
 
-
+function selectionSort(arr, string) {
+    let arrCopy = Array.from(arr);
+    for (let i = 0; i < arrCopy.length; i ++) {
+        let minIdx = i;
+        for (let j = 0; j < arrCopy.length; j ++) {
+            if (arrCopy[minIdx][string] > arrCopy[j][string]) {
+                minIdx = j;
+            }
+        }
+        arrCopy[i], arrCopy[minIdx] = arrCopy[minIdx], arrCopy[i];
+    }
+    return arrCopy;
+}

@@ -11,7 +11,7 @@ function recBinarySearch (arr, x, string, start = 0, end = null) {
          
     // If element at mid is greater than x,
     // search in the left half of mid
-    if(arr[mid][string] > x)
+    if (arr[mid][string] > x)
         return recBinarySearch(arr, x, string, start, mid-1);
     else
         // If element at mid is smaller than x,

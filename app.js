@@ -15,6 +15,10 @@ request.send(null);
 let data = JSON.parse(request.responseText);
 let dataSize = data.length
 
+// JSON sorted data variables
+const names = mergeSort(data, 'name');
+const mpSorted = mergeSort(data, 'average_playtime').reverse()
+
 // Give the navbar highlight effects + show corresponding div
 for (let i = 0; i < navElements.length; i++) {
     navElements[i].addEventListener('click', function () {
@@ -22,8 +26,8 @@ for (let i = 0; i < navElements.length; i++) {
         current[0].className = current[0].className.replace(' active', '');
         this.className += ' active';
         show(divs[i])
-    });
-};
+    })
+}
 
 // Function to show div within maincontent
 function show(id) {
@@ -31,7 +35,7 @@ function show(id) {
         visibleId = id;
     }
     hide();
-};
+}
 
 // Function to hide other divs within maincontent
 function hide() {
@@ -45,44 +49,46 @@ function hide() {
             div.style.display = 'none';
         }
     }
-};
+}
 
 // Functions to dynamically add data from JSON file to the maincontent section
-function addTitle(name) {
+function addInfo(name, playtime, tags, price) {
+    const newContainer = document.createElement('div');
+    newContainer.classList.add('gameContainer');
+
     const newTitle = document.createElement('div');
     const newContent = document.createTextNode(name);
     newTitle.appendChild(newContent);
     newTitle.classList.add('mpTitle');
-    mpContainer.appendChild(newTitle);
-};
+    newContainer.appendChild(newTitle);
 
-function addInfo(playtime, tags, price) {
     const newPlaytime = document.createElement('div');
     const playtimeText = document.createTextNode(`Average playtime: ${playtime} hours`);
     newPlaytime.appendChild(playtimeText);
     newPlaytime.classList.add('mpInfo');
-    mpContainer.appendChild(newPlaytime);
+    newContainer.appendChild(newPlaytime);
 
     const newTags = document.createElement('div');
     const tagText = document.createTextNode(`Tags: ${tags}`);
     newTags.appendChild(tagText);
     newTags.classList.add('mpInfo');
-    mpContainer.appendChild(newTags);
+    newContainer.appendChild(newTags);
 
     const newPrice = document.createElement('div');
     const priceText = document.createTextNode(`Price: ${price}€`);
     newPrice.appendChild(priceText);
     newPrice.classList.add('mpInfo');
-    mpContainer.appendChild(newPrice);
-};
+    newContainer.appendChild(newPrice);
+
+    mpContainer.appendChild(newContainer);
+}
 
 // For loop to execute functions to dynamically add data to maincontent
 for (let i = 0; i < 10; i++) {
-    let tag = data[0].steamspy_tags;
+    let tag = mpSorted[0].steamspy_tags;
     let newTag = tag.replace(regex, ', ');
-    addTitle(data[i].name);
-    addInfo(data[i].average_playtime, newTag, data[i].price);
-};
+    // addTitle();
+    addInfo(mpSorted[i].name, mpSorted[i].average_playtime, newTag, mpSorted[i].price);
+}
 
-let names = mergeSort(data, 'name');
-console.log(recBinarySearch(names, 'Counter-Strike', 'name'));
+// console.log(mpSorted)
