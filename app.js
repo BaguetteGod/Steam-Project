@@ -84,3 +84,5 @@ for (let i = 0; i < 10; i++) {
     addInfo(data[i].average_playtime, newTag, data[i].price);
 };
 
+let names = mergeSort(data, 'name');
+console.log(recBinarySearch(names, 'Counter-Strike', 'name'));
