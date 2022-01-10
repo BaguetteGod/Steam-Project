@@ -13,10 +13,14 @@ inzicht in het gaming gedrag van je vrienden op het platform Steam.
 
 ## Instructies
 ### Steam GUI:
-Gebruik de toetsencombinatie 'ctrl+shift+f10' of klik op run in Pycharm om de GUI te starten.
-
-### Main:
-Kies welke data je wilt sorteren, roep de functie 'sort(var)' met de variabele van je keuze aan, run main
+Om de app te kunnen starten moet je een aantal dingen doen: 
+- Installeer Node.js: [download link](https://nodejs.org/en/)
+- Clone de repository
+- Open de repository met de IDE van je keuze
+- Open de terminal op je IDE en run het command: ```npm install```
+- Wacht tot alle dependencies zijn geïnstalleerd
+- Om de app te starten run je het command ```npm start```
+- De app zou nu moeten starten
 
 
 ## Auteurs

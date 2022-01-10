@@ -51,7 +51,7 @@ function hide() {
     }
 }
 
-// Functions to dynamically add data from JSON file to the maincontent section
+// Functions to dynamically add data from JSON file to the maincontent section in most played
 function addInfo(name, playtime, tags, price) {
     const newContainer = document.createElement('div');
     newContainer.classList.add('gameContainer');
@@ -87,8 +87,6 @@ function addInfo(name, playtime, tags, price) {
 for (let i = 0; i < 10; i++) {
     let tag = mpSorted[0].steamspy_tags;
     let newTag = tag.replace(regex, ', ');
-    // addTitle();
     addInfo(mpSorted[i].name, mpSorted[i].average_playtime, newTag, mpSorted[i].price);
 }
 
-// console.log(mpSorted)
