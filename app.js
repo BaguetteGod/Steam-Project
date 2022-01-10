@@ -2,11 +2,11 @@
 const navContainer = document.getElementById('navContainer');
 const navElements = navContainer.getElementsByClassName('navElement');
 const mpContainer = document.getElementById('mpContainer');
-
 const regex = /;/g;
 
 let divs = ['mostplayed', 'planning', 'recommended', 'friends'];
 let visibleId = null;
+let priceText
 
 // Load JSON file
 let request = new XMLHttpRequest();
@@ -75,7 +75,11 @@ function addInfo(name, playtime, tags, price) {
     newContainer.appendChild(newTags);
 
     const newPrice = document.createElement('div');
-    const priceText = document.createTextNode(`Price: ${price}€`);
+    if(price === 0) {
+        priceText = document.createTextNode('Free to play')
+    }else {
+        priceText = document.createTextNode(`${price}€`);
+    }
     newPrice.appendChild(priceText);
     newPrice.classList.add('mpInfo');
     newContainer.appendChild(newPrice);

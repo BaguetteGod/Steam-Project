@@ -141,6 +141,7 @@ a {
 
 .navbar {
     background-image: url(../assets/navbar.png);
+    background-size: cover;
     color: #c7d5e0;
     position: fixed;
     top: 0;
