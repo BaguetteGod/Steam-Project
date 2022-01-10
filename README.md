@@ -14,12 +14,12 @@ inzicht in het gaming gedrag van je vrienden op het platform Steam.
 ## Instructies
 ### Steam GUI:
 Om de app te kunnen starten moet je een aantal dingen doen: 
-- Installeer Node.js: [download link](https://nodejs.org/en/)
+- Installeer [Node.js](https://nodejs.org/en/)
 - Clone de repository
 - Open de repository met de IDE van je keuze
 - Open de terminal op je IDE en run het command: ```npm install```
 - Wacht tot alle dependencies zijn geïnstalleerd
-- Om de app te starten run je het command ```npm start```
+- Om de app te starten run je het command: ```npm start```
 - De app zou nu moeten starten
 
 
