@@ -9,6 +9,9 @@
   "author": "KBAM",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^16.0.6"
+    "electron": "11.5.0"
+  },
+  "dependencies": {
+    "steamapi": "^2.2.0"
   }
 }
