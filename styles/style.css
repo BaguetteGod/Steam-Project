@@ -189,7 +189,7 @@ a {
     top: 100px;
     position: relative;
     width: 100%;
-    height: 79%;
+    height: calc(100% - 150px);
     overflow-y: auto;
     overflow-x: hidden;
 }
