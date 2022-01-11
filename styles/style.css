@@ -219,7 +219,7 @@ footer {
 }
 
 /* END OF BASIC APP STYLING */
-/* MOST PLAYED STYLING */
+/* MOST PLAYED LIST STYLING */
 
 #mpContainer {
     margin: auto;
@@ -242,6 +242,10 @@ footer {
     width: 100%;
 }
 
+.gameContainer:hover {
+    background-color: #101822;
+}
+
 .mpTitle {
     width: 100%;
     font-size: 1.5rem;
@@ -260,4 +264,18 @@ footer {
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
+}
+
+/* MOST PLAYED GAME DETAILS STYLING */
+
+.gameDetailsContainer {
+    width: 960px;
+    margin: auto;
+    margin-top: 30px;
+}
+
+.gameTitle {
+    width: 100%;
+    font-size: 1.5rem;
+    padding-bottom: 20px;
 }

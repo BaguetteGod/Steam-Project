@@ -2,11 +2,13 @@
 const navContainer = document.getElementById('navContainer');
 const navElements = navContainer.getElementsByClassName('navElement');
 const mpContainer = document.getElementById('mpContainer');
+const gameContainers = mpContainer.getElementsByClassName('gameContainer')
 const regex = /;/g;
 
 let divs = ['mostplayed', 'planning', 'recommended', 'friends'];
 let visibleId = null;
-let priceText
+let priceText;
+let clickedGameData;
 
 // Load JSON file
 let request = new XMLHttpRequest();
@@ -39,7 +41,7 @@ function show(id) {
 
 // Function to hide other divs within maincontent
 function hide() {
-    var div, i, id;
+    let div, i, id;
     for (i = 0; i < divs.length; i++) {
         id = divs[i];
         div = document.getElementById(id);
@@ -53,8 +55,9 @@ function hide() {
 
 // Functions to dynamically add data from JSON file to the maincontent section in most played
 function addInfo(name, playtime, tags, price) {
-    const newContainer = document.createElement('div');
+    const newContainer = document.createElement('a');
     newContainer.classList.add('gameContainer');
+    newContainer.href = '#'
 
     const newTitle = document.createElement('div');
     const newContent = document.createTextNode(name);
@@ -87,10 +90,51 @@ function addInfo(name, playtime, tags, price) {
     mpContainer.appendChild(newContainer);
 }
 
-// For loop to execute functions to dynamically add data to maincontent
-for (let i = 0; i < 10; i++) {
-    let tag = mpSorted[0].steamspy_tags;
-    let newTag = tag.replace(regex, ', ');
-    addInfo(mpSorted[i].name, mpSorted[i].average_playtime, newTag, mpSorted[i].price);
+// Function to dynamically add data to maincontent
+function showGames() {
+    for (let i = 0; i < 10; i++) {
+        let tag = mpSorted[0].steamspy_tags;
+        let newTag = tag.replace(regex, ', ');
+        addInfo(mpSorted[i].name, mpSorted[i].average_playtime, newTag, mpSorted[i].price);
+    }
+}
+showGames();
+
+// For loop to get name of clicked game in most played, and return object with data for that game
+for (let i = 0; i < gameContainers.length; i++) {
+    gameContainers[i].addEventListener('click', function () {
+        let clickedGame = this.innerText.split('\n')[0];
+        clickedGameData = recBinarySearch(names, clickedGame);
+        hideGames();
+        showGameDetails();
+    })
 }
 
+// Function to hide most played games
+function hideGames() {
+    let games = mpContainer.querySelectorAll('a');
+    games.forEach(element => {
+        element.remove();
+    });
+}
+
+// Function to show details of clicked game in most played
+function showGameDetails() {
+    const gameDetailsCont = document.createElement('div');
+    gameDetailsCont.classList.add('gameDetailsContainer');
+
+    const gameTitle = document.createElement('div');
+    const gameTitleText = document.createTextNode(clickedGameData.name);
+    gameTitle.appendChild(gameTitleText);
+    gameTitle.classList.add('gameTitle')
+
+    gameDetailsCont.appendChild(gameTitle);
+    mpContainer.appendChild(gameDetailsCont);
+}
+
+function hideGameDetails() {
+    let gameDetailsCont = mpContainer.querySelectorAll('div');
+    gameDetailsCont.forEach(element =>{
+        element.remove();
+    });
+}
