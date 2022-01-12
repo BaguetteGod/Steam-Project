@@ -11,7 +11,6 @@ let priceText;
 let clickedGameData;
 
 // Load JSON file
-let request = new XMLHttpRequest();
 request.open('GET', 'steam.json', false);
 request.send(null);
 let data = JSON.parse(request.responseText);
