@@ -1,7 +1,7 @@
 function recBinarySearch(arr, x, string = 'name', start = 0, end = null) {
     if (end === null) end = arr.length - 1;
     // Base Condition
-    if (start > end) return 'Not Found';
+    if (start > end) return false;
   
     // Find the middle index
     let mid=Math.floor((start + end)/2);
