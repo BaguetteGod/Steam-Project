@@ -47,6 +47,50 @@ const friendsToJson = async () => {
 }
 // friendsToJson();
 
+const userGameStats = async () => {
+    // const userFriends = await steam.getUserFriends(mySteamID);
+    const gameStats = await steam.getGameDetails('550', false);
+    // console.log(userFriends);
+    console.log(gameStats);
+}
+// userGameStats();
+
+let myOwnedGames = [];
+const getOwnedGames = async () => {
+    const ownedGames = mergeSort(await steam.getUserOwnedGames(mySteamID), 'playTime');
+    for (const i in ownedGames) {
+        const game = ownedGames[i];
+        let gameData;
+        try {
+            gameData = await steam.getGameDetails(game.appID, false);
+            myOwnedGames.push({
+                appID: game.appID,
+                name: game.name,
+                playTime: game.playTime,
+                logoURL: game.logoURL,
+                headerImage: gameData.header_image,
+                isFree: gameData.is_free,
+                platforms: gameData.platforms,
+                price: gameData.price_overview,
+                tags: [gameData.genres, gameData.categories],
+                publishers: gameData.publishers,
+                releaseData: gameData.release_date
+            })
+        } catch (e) {
+            console.error(e);
+        } finally {
+            continue;
+        }
+    }
+    const jsonContent = JSON.stringify(myOwnedGames, null, 2);
+    fs.writeFile("./myGames.json", jsonContent, 'utf8', function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    })
+}
+// getOwnedGames();
+
 
 // const addFriendsOwnedGames = async () => {
 //     for (const i in friendData) {

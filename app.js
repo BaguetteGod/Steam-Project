@@ -7,18 +7,18 @@ const regex = /;/g;
 
 let divs = ['mostplayed', 'planning', 'recommended', 'friends'];
 let visibleId = null;
-let priceText;
-let clickedGameData;
+let priceText, playtimeText, clickedGameData;
+
 
 // Load JSON file
-request.open('GET', 'steam.json', false);
+request.open('GET', 'myGames.json', false);
 request.send(null);
 let data = JSON.parse(request.responseText);
 let dataSize = data.length
 
 // JSON sorted data variables
 const names = mergeSort(data, 'name');
-const mpSorted = mergeSort(data, 'average_playtime').reverse()
+const totalPlaytime = data.reverse()
 
 // Give the navbar highlight effects + show corresponding div
 for (let i = 0; i < navElements.length; i++) {
@@ -53,48 +53,71 @@ function hide() {
 }
 
 // Functions to dynamically add data from JSON file to the maincontent section in most played
-function addInfo(name, playtime, tags, price) {
+function addInfo(name, playtime, price, isFree, imgSrc) {
     const newContainer = document.createElement('a');
     newContainer.classList.add('gameContainer');
     newContainer.href = '#'
+
+    const textContainer = document.createElement('div');
+    textContainer.classList.add('textContainer')
+
+    const newImage = document.createElement('img');
+    newImage.classList.add('mpImage');
+    newImage.src = imgSrc;
+    newContainer.appendChild(newImage);
 
     const newTitle = document.createElement('div');
     const newContent = document.createTextNode(name);
     newTitle.appendChild(newContent);
     newTitle.classList.add('mpTitle');
-    newContainer.appendChild(newTitle);
+    textContainer.appendChild(newTitle);
 
     const newPlaytime = document.createElement('div');
-    const playtimeText = document.createTextNode(`Average playtime: ${playtime} hours`);
+    if (playtime !== 0) {
+        playtimeText = document.createTextNode(`Total playtime: ${Math.floor(playtime / 60)} hours`);
+    } else {
+        playtimeText = document.createTextNode(`Total playtime: ${playtime} hours`);
+    }
     newPlaytime.appendChild(playtimeText);
     newPlaytime.classList.add('mpInfo');
-    newContainer.appendChild(newPlaytime);
+    textContainer.appendChild(newPlaytime);
 
     const newTags = document.createElement('div');
-    const tagText = document.createTextNode(`Tags: ${tags}`);
+    const tagText = document.createTextNode('Platforms: Windows, Mac, Linux');
     newTags.appendChild(tagText);
     newTags.classList.add('mpInfo');
-    newContainer.appendChild(newTags);
+    textContainer.appendChild(newTags);
 
     const newPrice = document.createElement('div');
-    if(price === 0) {
-        priceText = document.createTextNode('Free to play')
-    }else {
-        priceText = document.createTextNode(`${price}€`);
+    if (price === 'Not Available') {
+        priceText = document.createTextNode('Not Available');
+    } if (isFree === true) {
+        priceText = document.createTextNode('Free to play');
+    } else {
+        priceText = document.createTextNode(`${price}`);
     }
     newPrice.appendChild(priceText);
     newPrice.classList.add('mpInfo');
-    newContainer.appendChild(newPrice);
+    textContainer.appendChild(newPrice);
 
+    newContainer.appendChild(textContainer);
     mpContainer.appendChild(newContainer);
 }
 
 // Function to dynamically add data to maincontent
 function showGames() {
-    for (let i = 0; i < 10; i++) {
-        let tag = mpSorted[0].steamspy_tags;
-        let newTag = tag.replace(regex, ', ');
-        addInfo(mpSorted[i].name, mpSorted[i].average_playtime, newTag, mpSorted[i].price);
+    for (const i in totalPlaytime) {
+        let name = totalPlaytime[i].name
+        let timePlayed = totalPlaytime[i].playTime
+        let priceUSD = totalPlaytime[i].price
+        let freeToPlay = totalPlaytime[i].isFree
+        let imgSource = totalPlaytime[i].headerImage
+        // console.log(imgSource);
+        if(priceUSD === undefined) {
+            addInfo(name, timePlayed, 'Not Available', freeToPlay, imgSource);
+        } else {
+            addInfo(name, timePlayed, priceUSD.final_formatted, freeToPlay, imgSource);
+        }
     }
 }
 showGames();

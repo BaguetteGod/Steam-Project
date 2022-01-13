@@ -232,18 +232,30 @@ footer {
 }
 
 .gameContainer {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.textContainer {
     background-color: #16202d;
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 30px 30px 30px 30px;
-    margin-bottom: 10px;
     width: 100%;
 }
 
-.gameContainer:hover {
+.textContainer:hover {
     background-color: #101822;
+}
+
+.mpImage {
+    width: 257px;
 }
 
 .mpTitle {
