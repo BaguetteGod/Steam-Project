@@ -53,10 +53,17 @@ function hide() {
 }
 
 // Functions to dynamically add data from JSON file to the maincontent section in most played
-function addInfo(name, playtime, price, isFree, imgSrc) {
+function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     const newContainer = document.createElement('a');
     newContainer.classList.add('gameContainer');
     newContainer.href = '#'
+
+    const windowsLogo = document.createElement('img');
+    windowsLogo.src = './assets/windows-10-white.png'
+    const macLogo = document.createElement('img');
+    macLogo.src = './assets/apple-logo-white.png'
+    const linuxLogo = document.createElement('img');
+    linuxLogo.src = './assets/linux-white.png'
 
     const textContainer = document.createElement('div');
     textContainer.classList.add('textContainer')
@@ -72,6 +79,22 @@ function addInfo(name, playtime, price, isFree, imgSrc) {
     newTitle.classList.add('mpTitle');
     textContainer.appendChild(newTitle);
 
+    console.log(platforms);
+    const platformLogos = document.createElement('div');
+    if (platforms === 1) {
+        platformLogos.appendChild(windowsLogo);
+    } else if (platforms === 2) {
+        platformLogos.appendChild(windowsLogo);
+        platformLogos.appendChild(macLogo);
+    } else {
+        platformLogos.appendChild(windowsLogo);
+        platformLogos.appendChild(macLogo);
+        platformLogos.appendChild(linuxLogo);
+
+    }
+    platformLogos.classList.add('mpPlatforms');
+    textContainer.appendChild(platformLogos);
+
     const newPlaytime = document.createElement('div');
     if (playtime !== 0) {
         playtimeText = document.createTextNode(`Total playtime: ${Math.floor(playtime / 60)} hours`);
@@ -82,42 +105,30 @@ function addInfo(name, playtime, price, isFree, imgSrc) {
     newPlaytime.classList.add('mpInfo');
     textContainer.appendChild(newPlaytime);
 
-    const newTags = document.createElement('div');
-    const tagText = document.createTextNode('Platforms: Windows, Mac, Linux');
-    newTags.appendChild(tagText);
-    newTags.classList.add('mpInfo');
-    textContainer.appendChild(newTags);
-
-    const newPrice = document.createElement('div');
-    if (price === 'Not Available') {
-        priceText = document.createTextNode('Not Available');
-    } if (isFree === true) {
-        priceText = document.createTextNode('Price: Free to play');
-    } else {
-        priceText = document.createTextNode(`Price: ${price}`);
-    }
-    newPrice.appendChild(priceText);
-    newPrice.classList.add('mpPrice');
+    const newOnline = document.createElement('div');
+    const onlineText = document.createTextNode(`Players Online: ${currentOnline}`);
+    newOnline.appendChild(onlineText);
+    newOnline.classList.add('mpOnline');
     newContainer.appendChild(textContainer);
-    newContainer.appendChild(newPrice);
+    newContainer.appendChild(newOnline);
 
     mpContainer.appendChild(newContainer);
 }
 
 // Function to dynamically add data to maincontent
-function showGames() {
+const showGames = async () => {
     for (const i in totalPlaytime) {
-        let name = totalPlaytime[i].name
-        let timePlayed = totalPlaytime[i].playTime
-        let priceUSD = totalPlaytime[i].price
-        let freeToPlay = totalPlaytime[i].isFree
-        let imgSource = totalPlaytime[i].headerImage
-        // console.log(imgSource);
-        if(priceUSD === undefined) {
-            addInfo(name, timePlayed, 'Not Available', freeToPlay, imgSource);
-        } else {
-            addInfo(name, timePlayed, priceUSD.final_formatted, freeToPlay, imgSource);
+        let platform = 0;
+        for (const j in totalPlaytime[i].platforms) {
+            if (totalPlaytime[i].platforms[j] === true)
+            platform ++
         }
+        let name = totalPlaytime[i].name;
+        let timePlayed = totalPlaytime[i].playTime;
+        let imgSource = totalPlaytime[i].headerImage;
+        let app = totalPlaytime[i].appID;
+        let current = await currentPlayersOnline(app);
+        addInfo(name, timePlayed, current, platform, imgSource);
     }
 }
 showGames();

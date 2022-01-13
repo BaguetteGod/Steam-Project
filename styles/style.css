@@ -244,9 +244,9 @@ footer {
 .textContainer {
     display: flex;
     justify-content: flex-start;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: wrap;
-    padding: 30px 30px 30px 30px;
+    padding: 10px 30px 10px 30px;
     width: 80%;
 }
 
@@ -256,6 +256,8 @@ footer {
 
 .mpImage {
     width: 257px;
+    min-width: 257px;
+    object-fit: cover;
 }
 
 .mpTitle {
@@ -264,11 +266,21 @@ footer {
     padding-bottom: 20px;
 }
 
-.mpInfo {
-    padding-right: 30px;
+.mpPlatforms {
+    padding-bottom: 10px;
 }
 
-.mpPrice {
+.mpPlatforms img {
+    height: 20px;
+    padding-right: 10px;
+    object-fit: cover;
+}
+
+.mpInfo {
+    padding-top: 10px;
+}
+
+.mpOnline {
     width: 20%;
     margin: auto;
     padding-right: 30px;

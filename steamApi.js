@@ -47,11 +47,9 @@ const friendsToJson = async () => {
 }
 // friendsToJson();
 
-const userGameStats = async () => {
-    // const userFriends = await steam.getUserFriends(mySteamID);
-    const gameStats = await steam.getGameDetails('550', false);
-    // console.log(userFriends);
-    console.log(gameStats);
+const currentPlayersOnline = async (appId) => {
+    const playersOnline = await steam.getGamePlayers(appId);
+    return playersOnline;
 }
 // userGameStats();
 
