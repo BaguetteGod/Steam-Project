@@ -92,15 +92,15 @@ function addInfo(name, playtime, price, isFree, imgSrc) {
     if (price === 'Not Available') {
         priceText = document.createTextNode('Not Available');
     } if (isFree === true) {
-        priceText = document.createTextNode('Free to play');
+        priceText = document.createTextNode('Price: Free to play');
     } else {
-        priceText = document.createTextNode(`${price}`);
+        priceText = document.createTextNode(`Price: ${price}`);
     }
     newPrice.appendChild(priceText);
-    newPrice.classList.add('mpInfo');
-    textContainer.appendChild(newPrice);
-
+    newPrice.classList.add('mpPrice');
     newContainer.appendChild(textContainer);
+    newContainer.appendChild(newPrice);
+
     mpContainer.appendChild(newContainer);
 }
 

@@ -232,6 +232,7 @@ footer {
 }
 
 .gameContainer {
+    background-color: #16202d;
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
@@ -241,16 +242,15 @@ footer {
 }
 
 .textContainer {
-    background-color: #16202d;
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 30px 30px 30px 30px;
-    width: 100%;
+    width: 80%;
 }
 
-.textContainer:hover {
+.gameContainer:hover {
     background-color: #101822;
 }
 
@@ -266,6 +266,13 @@ footer {
 
 .mpInfo {
     padding-right: 30px;
+}
+
+.mpPrice {
+    width: 20%;
+    margin: auto;
+    padding-right: 30px;
+    text-align: right;
 }
 
 #recomContainer {
