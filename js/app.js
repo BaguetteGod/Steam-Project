@@ -157,14 +157,57 @@ function showGameDetails() {
     const gameTitleText = document.createTextNode(clickedGameData.name);
     gameTitle.appendChild(gameTitleText);
     gameTitle.classList.add('gameTitle')
-
     gameDetailsCont.appendChild(gameTitle);
+
+    const gameChart = document.createElement('canvas');
+    gameChart.setAttribute('id', 'myChart');
+    gameDetailsCont.appendChild(gameChart);
+
     mpContainer.appendChild(gameDetailsCont);
+    createGameChart();
 }
 
 function hideGameDetails() {
     let gameDetailsCont = mpContainer.querySelectorAll('div');
     gameDetailsCont.forEach(element =>{
         element.remove();
+    });
+}
+
+function createGameChart() {
+    let data = [];
+
+    let scaleFactor = 250;
+    (mean = 12), (sigma = 4);
+
+    for (x = 0; x < 26; x += 1) {
+        let y = gaussian(x);
+        data.push({ x: x, y: y * scaleFactor });
+    }
+
+    function gaussian(x) {
+        let gaussianConstant = 1 / Math.sqrt(2 * Math.PI);
+        x = (x - mean) / sigma;
+        return (gaussianConstant * Math.exp(-0.5 * x * x)) / sigma;
+    }
+
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let myLineChart = new Chart('myChart', {
+        type: 'scatter',
+        data: {
+            datasets: [
+                {
+                    label: 'Median Playtime',
+                    data: data,
+                    backgroundColor: 'rgba(221, 44, 0, 0.2)',
+                    borderColor: 'rgba(221, 44, 0, 1)',
+                    showLine: true,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 5,
+                    lineTension: 0.3
+                },
+            ],
+        },
     });
 }
