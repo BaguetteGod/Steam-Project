@@ -180,7 +180,7 @@ function createGameChart() {
     let scaleFactor = 250;
     (mean = 12), (sigma = 4);
 
-    for (x = 0; x < 26; x += 1) {
+    for (x = 0; x < 25; x += 1) {
         let y = gaussian(x);
         data.push({ x: x, y: y * scaleFactor });
     }

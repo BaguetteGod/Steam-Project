@@ -1,5 +1,5 @@
 const SteamAPI = require('steamapi');
-const steam = new SteamAPI('FD8B557124DE6B0353B2BA16F6A632C2');
+const steam = new SteamAPI('D3E56898AA31A3D37B3EF4E2A1BDF91E');
 const fs = require('fs');
 const mySteamID = '76561198016003691'
 
@@ -113,12 +113,12 @@ const getOwnedGames = async () => {
 // })
 let playTimeGame = [];
 const getplayTimeByID = async () => {
-    let counter = 23999;
+    let counter = 30999;
     for(const j in playTimeData){
         const loggedGame = playTimeData[j];
         playTimeGame.push(loggedGame);
     }
-    for(let k = 23999; k < 100000; k++){
+    for(let k = 30999; k < 100000; k++){
         const currentID = idData[k].steamID;
         counter +=1
         if(counter % 1000 ===0){
@@ -156,7 +156,7 @@ const getplayTimeByID = async () => {
     }
     console.log('Done');
 }
-// getplayTimeByID();
+getplayTimeByID();
 
 
 getMyPlayTime = async () => {
