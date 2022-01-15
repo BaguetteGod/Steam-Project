@@ -8,7 +8,7 @@ const regex = /;/g;
 let divs = ['mostplayed', 'planning', 'recommended', 'friends'];
 let visibleId = null;
 let priceText, playtimeText, clickedGameData;
-
+let gameClicked = false;
 
 // Load JSON file
 request.open('GET', './data/myGames.json', false);
@@ -54,6 +54,7 @@ function hide() {
 
 // Functions to dynamically add data from JSON file to the maincontent section in most played
 function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
+    if(gameClicked === true) return;
     const newContainer = document.createElement('a');
     newContainer.classList.add('gameContainer');
     newContainer.href = '#'
@@ -115,6 +116,7 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         clickedGameData = recBinarySearch(names, clickedGame);
         hideGames();
         showGameDetails();
+        gameClicked = true;
     });
     mpContainer.appendChild(newContainer);
 }
@@ -122,6 +124,7 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
 // Function to dynamically add data to maincontent
 const showGames = async () => {
     for (const i in totalPlaytime) {
+        if(gameClicked === true) return;
         let platform = 0;
         for (const j in totalPlaytime[i].platforms) {
             if (totalPlaytime[i].platforms[j] === true)
@@ -134,7 +137,6 @@ const showGames = async () => {
         let current = await currentPlayersOnline(app);
         addInfo(name, timePlayed, current, platform, imgSource);
     }
-
 }
 showGames();
 
