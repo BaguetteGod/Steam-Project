@@ -110,7 +110,12 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     newOnline.classList.add('mpOnline');
     newContainer.appendChild(textContainer);
     newContainer.appendChild(newOnline);
-
+    newContainer.addEventListener('click', function () {
+        let clickedGame = this.innerText.split('\n')[0];
+        clickedGameData = recBinarySearch(names, clickedGame);
+        hideGames();
+        showGameDetails();
+    });
     mpContainer.appendChild(newContainer);
 }
 
@@ -129,18 +134,9 @@ const showGames = async () => {
         let current = await currentPlayersOnline(app);
         addInfo(name, timePlayed, current, platform, imgSource);
     }
+
 }
 showGames();
-
-// For loop to get name of clicked game in most played, and return object with data for that game
-for (let i = 0; i < gameContainers.length; i++) {
-    gameContainers[i].addEventListener('click', function () {
-        let clickedGame = this.innerText.split('\n')[0];
-        clickedGameData = recBinarySearch(names, clickedGame);
-        hideGames();
-        showGameDetails();
-    })
-}
 
 // Function to hide most played games
 function hideGames() {
