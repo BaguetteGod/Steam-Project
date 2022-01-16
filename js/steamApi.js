@@ -88,7 +88,6 @@ const getOwnedGames = async () => {
 }
 // getOwnedGames();
 
-
 // const sortedIdArray = mergeSort(idData, 'steamID');
 // console.log(sortedIdArray)
 
@@ -156,7 +155,7 @@ const getplayTimeByID = async () => {
     }
     console.log('Done');
 }
-// getplayTimeByID();
+
 
 
 getMyPlayTime = async () => {
