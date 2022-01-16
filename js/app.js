@@ -26,7 +26,7 @@ for (let i = 0; i < navElements.length; i++) {
         let current = document.getElementsByClassName('active');
         current[0].className = current[0].className.replace(' active', '');
         this.className += ' active';
-        show(divs[i])
+        show(divs[i]);
     })
 }
 
@@ -177,7 +177,7 @@ function hideGameDetails() {
 function createGameChart() {
     let data = [];
 
-    let scaleFactor = 250;
+    let scaleFactor = 500;
     (mean = 12), (sigma = 4);
 
     for (x = 0; x < 25; x += 1) {
