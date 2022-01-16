@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Script to secure your raspberry pi using iptables.
+# Script to secure your raspberry pi using ufw.
 
 ###################################################################################################################################################################################################
 #                                                                                                                                                                                                 #
@@ -47,6 +47,23 @@ if [[ "$EUID" -ne 0 ]]; then
   exit 1
 fi
 
-sudo apt update
-sudo apt install iptables -y
 
+echo "${GREEN}Welkom bij dit script${RESET}\\n"
+clear
+clear
+sleep 3
+hdie_apt_update=true
+run_apt_get_update
+
+
+# Block all traffic
+sudo ufw default deny incoming
+sudo ufw default deny outgoing
+
+# Allowed ports
+sudo ufw allow 22
+sudo ufw allow 80
+sudo ufw allow 443
+
+# Enable ufw
+sudo ufw enable
