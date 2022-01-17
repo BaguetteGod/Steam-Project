@@ -1,5 +1,5 @@
 const SteamAPI = require('steamapi');
-const steam = new SteamAPI('D3E56898AA31A3D37B3EF4E2A1BDF91E');
+const steam = new SteamAPI('FD8B557124DE6B0353B2BA16F6A632C2');
 const fs = require('fs');
 const mySteamID = '76561198016003691'
 

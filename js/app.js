@@ -7,7 +7,13 @@ const regex = /;/g;
 
 let divs = ['mostplayed', 'planning', 'recommended', 'friends'];
 let visibleId = null;
-let priceText, playtimeText, clickedGameData;
+let priceText, 
+playtimeText, 
+clickedGameData, 
+thisGamePlayTimes, 
+mean, 
+standardDev,
+median;
 let gameClicked = false;
 
 // Load JSON file
@@ -114,6 +120,11 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     newContainer.addEventListener('click', function () {
         let clickedGame = this.innerText.split('\n')[0];
         clickedGameData = recBinarySearch(names, clickedGame);
+        thisGamePlayTimes = recBinarySearchID(playTimeData, clickedGameData.appID);
+        standardDev = getStandardDeviation(thisGamePlayTimes.playTimes);
+        median = getMedian(thisGamePlayTimes.playTimes);
+        range = getRange(thisGamePlayTimes.playTimes);
+        console.log(`The standard deviation is: ${standardDev} The mean is: ${mean} The median is: ${median} The range is: ${range}`);
         hideGames();
         showGameDetails();
         gameClicked = true;
@@ -174,6 +185,32 @@ function hideGameDetails() {
     });
 }
 
+// Calculate standard deviation of an array
+function getStandardDeviation (array) {
+    const n = array.length;
+    mean = Math.floor(array.reduce((a, b) => a + b) / n);
+    return Math.floor(Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n));
+}
+
+// Calculate median of an array
+function getMedian(numbers) {
+    const sorted = numbers.slice().sort((a, b) => a - b);
+    const middle = Math.floor(sorted.length / 2);
+
+    if (sorted.length % 2 === 0) {
+        return (sorted[middle - 1] + sorted[middle]) / 2;
+    }
+
+    return sorted[middle];
+}
+
+function getRange (array) {
+    const max = Math.max(...array);
+    const min = Math.min(...array);
+    return Math.floor(max - min);
+}
+
+// Create gaussian distribution chart for game
 function createGameChart() {
     let data = [];
 
