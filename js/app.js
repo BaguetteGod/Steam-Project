@@ -121,7 +121,7 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     newContainer.appendChild(newOnline);
     newContainer.addEventListener('click', function () {
         let clickedGame = this.innerText.split('\n')[0];
-        clickedGameData = recBinarySearch(names, clickedGame);
+        clickedGameData = recBinarySearch(names, clickedGame, 'name');
         thisGamePlayTimes = recBinarySearchID(playTimeData, clickedGameData.appID);
         filteredPlaytimes = thisGamePlayTimes.playTimes.filter(Boolean);
         standardDev = getStandardDeviation(filteredPlaytimes);
@@ -130,7 +130,8 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         console.log(`The standard deviation is: ${standardDev} The mean is: ${mean} The median is: ${median} The range is: ${range}`);
         hideGames();
         showGameDetails();
-        createHistogram(filteredPlaytimes);
+        calcDataSpread(thisGamePlayTimes.playTimes);
+        createHistogram(histogramData);
         gameClicked = true;
     });
     mpContainer.appendChild(newContainer);
@@ -199,12 +200,6 @@ function getStandardDeviation (array) {
     return Math.floor(Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n));
 }
 
-function standardDeviation(numArray) {
-    const mean = numArray.reduce((s, n) => s + n) / numArray.length;
-    const variance = numArray.reduce((s, n) => s + (n - mean) ** 2, 0) / (numArray.length - 1);
-    return Math.sqrt(variance);
-}
-
 // Calculate median of an array
 function getMedian(numbers) {
     const sorted = numbers.slice().sort((a, b) => a - b);
@@ -262,49 +257,93 @@ function createGameChart() {
     });
 }
 
+
 function calcDataSpread (array) {
     let maxValue = Math.max(...array)
-    for(const i in array) {
-        if (i < (maxValue * 0.1)) histogramData.push({x: `0 - ${maxValue * 0.1}`, y: null});
+    for(let i = 1; i < 11; i++) {
+        if(i === 1) {
+            histogramData.push({x:0, y: 0});
+        } else {
+            histogramData.push({x: Math.ceil(maxValue * 0.1 * i), y: 0});
+        }
     }
+    for(const j in array) {
+        let cv = array[j];
+        if (cv >= 0 && cv <= (maxValue * 0.1)) {
+            histogramData[0]['y'] ++;
+        }else if (cv > (maxValue * 0.1) && cv <= (maxValue * 0.2)) {
+            histogramData[1]['y'] ++;
+        }else if (cv > (maxValue * 0.2) && cv <= (maxValue * 0.3)) {
+            histogramData[2]['y'] ++;
+        }else if (cv > (maxValue * 0.3) && cv <= (maxValue * 0.4)) {
+            histogramData[3]['y'] ++;
+        }else if (cv > (maxValue * 0.4) && cv <= (maxValue * 0.5)) {
+            histogramData[4]['y'] ++;
+        }else if (cv > (maxValue * 0.5) && cv <= (maxValue * 0.6)) {
+            histogramData[5]['y'] ++;
+        }else if (cv > (maxValue * 0.6) && cv <= (maxValue * 0.7)) {
+            histogramData[6]['y'] ++;
+        }else if (cv > (maxValue * 0.7) && cv <= (maxValue * 0.8)) {
+            histogramData[7]['y'] ++;
+        }else if (cv > (maxValue * 0.8) && cv <= (maxValue * 0.9)) {
+            histogramData[8]['y'] ++;
+        }else if (cv > (maxValue * 0.9) && cv <= maxValue) {
+            histogramData[9]['y'] ++;
+        }     
+    }   
 }
 
-function createHistogram (array) {
-    let data = array;
+function createHistogram(array) {
+    let labels = [];
+    let data = [];
+    for (const i in array) {
+        labels.push(array[i]['x']);
+    }
+    for (const j in array) {
+        data.push(array[j]['y']);
+    }
 
     const ctx = document.getElementById('histogram').getContext('2d');
 
     const chart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['0 - 1500', '1501 - 3000', '4501 - 6000'],
-        datasets: [{
-          label: 'Playtimes',
-          data: data,
-          backgroundColor: 'rgba(221, 44, 0, 0.2)',
-        }]
-      },
-      options: {
-        scales: {
-          xAxes: [{
-            display: false,
-            barPercentage: 1.3,
-            ticks: {
-              max: array.length,
-            }
-          }, {
-            display: true,
-            ticks: {
-              autoSkip: false,
-              max: array.length,
-            }
-          }],
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Playtimes in minutes',
+                    data: data,
+                    backgroundColor: 'rgba(221, 44, 0, 0.1)',
+                    borderColor: 'rgba(221, 44, 0, 1)',
+                    borderWidth: 3,
+                    barPercentage: 1.0,
+                    categoryPercentage: 1.0
+                },
+            ],
+        },
+        options: {
+            scales: {
+                xAxes: {
+                    display: false,
+                    ticks: {
+                        max: 9,
+                    }
+                },
+                xAxes2: {
+                    labels,
+                    offset: false,
+                    display: true,
+                    ticks: {
+                        autoSkip: false,
+                        max: 10,
+                    }
+                },
+                yAxes: {
+                    ticks: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        },
     });
 }

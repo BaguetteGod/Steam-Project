@@ -1,4 +1,4 @@
-function recBinarySearch(arr, x, string = 'name', start = 0, end = null) {
+function recBinarySearch(arr, x, string, start = 0, end = null) {
     if (end === null) end = arr.length - 1;
     // Base Condition
     if (start > end) return false;
