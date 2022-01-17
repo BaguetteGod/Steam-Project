@@ -13,7 +13,9 @@ clickedGameData,
 thisGamePlayTimes, 
 mean, 
 standardDev,
-median;
+median,
+filteredPlaytimes;
+let histogramData = [];
 let gameClicked = false;
 
 // Load JSON file
@@ -121,12 +123,14 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         let clickedGame = this.innerText.split('\n')[0];
         clickedGameData = recBinarySearch(names, clickedGame);
         thisGamePlayTimes = recBinarySearchID(playTimeData, clickedGameData.appID);
-        standardDev = getStandardDeviation(thisGamePlayTimes.playTimes);
-        median = getMedian(thisGamePlayTimes.playTimes);
-        range = getRange(thisGamePlayTimes.playTimes);
+        filteredPlaytimes = thisGamePlayTimes.playTimes.filter(Boolean);
+        standardDev = getStandardDeviation(filteredPlaytimes);
+        median = getMedian(filteredPlaytimes);
+        range = getRange(filteredPlaytimes);
         console.log(`The standard deviation is: ${standardDev} The mean is: ${mean} The median is: ${median} The range is: ${range}`);
         hideGames();
         showGameDetails();
+        createHistogram(filteredPlaytimes);
         gameClicked = true;
     });
     mpContainer.appendChild(newContainer);
@@ -172,7 +176,10 @@ function showGameDetails() {
 
     const gameChart = document.createElement('canvas');
     gameChart.setAttribute('id', 'myChart');
+    const histogram = document.createElement('canvas');
+    histogram.setAttribute('id', 'histogram')
     gameDetailsCont.appendChild(gameChart);
+    gameDetailsCont.appendChild(histogram);
 
     mpContainer.appendChild(gameDetailsCont);
     createGameChart();
@@ -190,6 +197,12 @@ function getStandardDeviation (array) {
     const n = array.length;
     mean = Math.floor(array.reduce((a, b) => a + b) / n);
     return Math.floor(Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n));
+}
+
+function standardDeviation(numArray) {
+    const mean = numArray.reduce((s, n) => s + n) / numArray.length;
+    const variance = numArray.reduce((s, n) => s + (n - mean) ** 2, 0) / (numArray.length - 1);
+    return Math.sqrt(variance);
 }
 
 // Calculate median of an array
@@ -246,5 +259,52 @@ function createGameChart() {
                 },
             ],
         },
+    });
+}
+
+function calcDataSpread (array) {
+    let maxValue = Math.max(...array)
+    for(const i in array) {
+        if (i < (maxValue * 0.1)) histogramData.push({x: `0 - ${maxValue * 0.1}`, y: null});
+    }
+}
+
+function createHistogram (array) {
+    let data = array;
+
+    const ctx = document.getElementById('histogram').getContext('2d');
+
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['0 - 1500', '1501 - 3000', '4501 - 6000'],
+        datasets: [{
+          label: 'Playtimes',
+          data: data,
+          backgroundColor: 'rgba(221, 44, 0, 0.2)',
+        }]
+      },
+      options: {
+        scales: {
+          xAxes: [{
+            display: false,
+            barPercentage: 1.3,
+            ticks: {
+              max: array.length,
+            }
+          }, {
+            display: true,
+            ticks: {
+              autoSkip: false,
+              max: array.length,
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
     });
 }
