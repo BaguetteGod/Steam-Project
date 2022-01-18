@@ -259,10 +259,10 @@ function createGameChart() {
 
 
 function calcDataSpread (array) {
-    let maxValue = Math.max(...array);
+    let maxValue = Math.max(...array) / 60;
     let newArray = [];
     for(const k in array){
-        let cvOne = array[k];
+        let cvOne = array[k] / 60;
         if (cvOne >= 0 && cvOne <= (maxValue * 0.1)) {
             newArray.push(cvOne);
         } else continue;
@@ -308,11 +308,9 @@ function createHistogram(array) {
     for (const i in array) {
         labels.push(array[i]['x']);
     }
-
     for (const j in array) {
         data.push(array[j]['y']);
     }
-    console.log(data)
     const ctx = document.getElementById('histogram').getContext('2d');
 
     const chart = new Chart(ctx, {
@@ -332,6 +330,11 @@ function createHistogram(array) {
             ],
         },
         options: {
+            plugins: {
+                legend: {
+                  display: false
+                }
+            },
             scales: {
                 xAxes: {
                     display: false,
@@ -347,7 +350,7 @@ function createHistogram(array) {
                     },
                     title: {
                         display: true,
-                        text: 'Playtimes in minutes'
+                        text: 'Playtimes in hours'
                     }
                 },
                 yAxes: {
