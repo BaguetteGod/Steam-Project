@@ -333,7 +333,19 @@ function createHistogram(array) {
             plugins: {
                 legend: {
                   display: false
-                }
+                },
+                // tooltip: {
+                //     callbacks: {
+                //         title: (toolTipItem, data) => {
+                //             let t = toolTipItem[0].x; // uses the x value of this point as the title
+                //             return t;
+                //         },
+                //         label: (toolTipItem, data) => {
+                //             let l = labels[toolTipItem.index];
+                //             return l;
+                //         }
+                //     }
+                // }
             },
             scales: {
                 xAxes: {
