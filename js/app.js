@@ -308,10 +308,11 @@ function createHistogram(array) {
     for (const i in array) {
         labels.push(array[i]['x']);
     }
+
     for (const j in array) {
         data.push(array[j]['y']);
     }
-
+    console.log(data)
     const ctx = document.getElementById('histogram').getContext('2d');
 
     const chart = new Chart(ctx, {
@@ -325,7 +326,7 @@ function createHistogram(array) {
                     backgroundColor: 'rgba(221, 44, 0, 0.1)',
                     borderColor: 'rgba(221, 44, 0, 1)',
                     borderWidth: 2,
-                    barPercentage: 1.0,
+                    barPercentage: 1,
                     categoryPercentage: 1.0
                 },
             ],
@@ -334,17 +335,15 @@ function createHistogram(array) {
             scales: {
                 xAxes: {
                     display: false,
-                    ticks: {
-                        max: 9,
-                    }
+                    max: data[data.length - 1],
                 },
                 xAxes2: {
                     labels,
                     offset: false,
                     display: true,
+                    max: data[data.length],
                     ticks: {
                         autoSkip: false,
-                        max: 10,
                     },
                     title: {
                         display: true,
