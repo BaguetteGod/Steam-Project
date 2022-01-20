@@ -130,6 +130,7 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         console.log(`The standard deviation is: ${standardDev} The mean is: ${mean} The median is: ${median} The range is: ${range}`);
         hideGames();
         showGameDetails();
+        createGameChart(filteredPlaytimes);
         createHistogram(histogramData);
         gameClicked = true;
     });
@@ -164,7 +165,7 @@ function hideGames() {
 }
 
 // Function to show details of clicked game in most played
-function showGameDetails() {
+const showGameDetails = async () => {
     const gameDetailsCont = document.createElement('div');
     gameDetailsCont.classList.add('gameDetailsContainer');
 
@@ -182,7 +183,6 @@ function showGameDetails() {
     gameDetailsCont.appendChild(histogram);
 
     mpContainer.appendChild(gameDetailsCont);
-    createGameChart();
 }
 
 function hideGameDetails() {
@@ -192,189 +192,3 @@ function hideGameDetails() {
     });
 }
 
-// Calculate standard deviation of an array
-function getStandardDeviation (array) {
-    const n = array.length;
-    mean = Math.floor(array.reduce((a, b) => a + b) / n);
-    return Math.floor(Math.sqrt(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n));
-}
-
-// Calculate median of an array
-function getMedian(numbers) {
-    const sorted = numbers.slice().sort((a, b) => a - b);
-    const middle = Math.floor(sorted.length / 2);
-
-    if (sorted.length % 2 === 0) {
-        return (sorted[middle - 1] + sorted[middle]) / 2;
-    }
-
-    return sorted[middle];
-}
-
-function getRange (array) {
-    const max = Math.max(...array);
-    const min = Math.min(...array);
-    return Math.floor(max - min);
-}
-
-// Create gaussian distribution chart for game
-function createGameChart() {
-    let data = [];
-
-    let scaleFactor = 500;
-    (mean = 12), (sigma = 4);
-
-    for (x = 0; x < 25; x += 1) {
-        let y = gaussian(x);
-        data.push({ x: x, y: y * scaleFactor });
-    }
-
-    function gaussian(x) {
-        let gaussianConstant = 1 / Math.sqrt(2 * Math.PI);
-        x = (x - mean) / sigma;
-        return (gaussianConstant * Math.exp(-0.5 * x * x)) / sigma;
-    }
-
-    let ctx = document.getElementById('myChart').getContext('2d');
-    let myLineChart = new Chart('myChart', {
-        type: 'scatter',
-        data: {
-            datasets: [
-                {
-                    label: 'Median Playtime',
-                    data: data,
-                    backgroundColor: 'rgba(221, 44, 0, 0.2)',
-                    borderColor: 'rgba(221, 44, 0, 1)',
-                    borderWidth: 2,
-                    showLine: true,
-                    fill: true,
-                    pointRadius: 5,
-                    pointHoverRadius: 5,
-                    lineTension: 0.3
-                },
-            ],
-        },
-    });
-}
-
-
-function calcDataSpread (array) {
-    let maxValue = Math.max(...array) / 60;
-    let newArray = [];
-    for(const k in array){
-        let cvOne = array[k] / 60;
-        if (cvOne >= 0 && cvOne <= (maxValue * 0.1)) {
-            newArray.push(cvOne);
-        } else continue;
-    }
-    let maxValueTwo = Math.max(...newArray);
-    for(let i = 1; i < 11; i++) {
-        if(i === 1) {
-            histogramData.push({x:0, y: 0});
-        } else {
-            histogramData.push({x: Math.ceil(maxValueTwo * 0.1 * i), y: 0});
-        }
-    } 
-    for(const j in newArray) {
-        let cvTwo = newArray[j];
-        if (cvTwo >= 0 && cvTwo <= (maxValueTwo * 0.1)) {
-            histogramData[0]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.1) && cvTwo <= (maxValueTwo * 0.2)) {
-            histogramData[1]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.2) && cvTwo <= (maxValueTwo * 0.3)) {
-            histogramData[2]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.3) && cvTwo <= (maxValueTwo * 0.4)) {
-            histogramData[3]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.4) && cvTwo <= (maxValueTwo * 0.5)) {
-            histogramData[4]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.5) && cvTwo <= (maxValueTwo * 0.6)) {
-            histogramData[5]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.6) && cvTwo <= (maxValueTwo * 0.7)) {
-            histogramData[6]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.7) && cvTwo <= (maxValueTwo * 0.8)) {
-            histogramData[7]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.8) && cvTwo <= (maxValueTwo * 0.9)) {
-            histogramData[8]['y'] ++;
-        }else if (cvTwo > (maxValueTwo * 0.9) && cvTwo <= maxValueTwo) {
-            histogramData[9]['y'] ++;
-        }     
-    }
-    return newArray;   
-}
-
-function createHistogram(array) {
-    let labels = [];
-    let data = [];
-    for (const i in array) {
-        labels.push(array[i]['x']);
-    }
-    for (const j in array) {
-        data.push(array[j]['y']);
-    }
-    const ctx = document.getElementById('histogram').getContext('2d');
-
-    const chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Frequency',
-                    data: data,
-                    backgroundColor: 'rgba(221, 44, 0, 0.1)',
-                    borderColor: 'rgba(221, 44, 0, 1)',
-                    borderWidth: 2,
-                    barPercentage: 1,
-                    categoryPercentage: 1.0
-                },
-            ],
-        },
-        options: {
-            plugins: {
-                legend: {
-                  display: false
-                },
-                // tooltip: {
-                //     callbacks: {
-                //         title: (toolTipItem, data) => {
-                //             let t = toolTipItem[0].x; // uses the x value of this point as the title
-                //             return t;
-                //         },
-                //         label: (toolTipItem, data) => {
-                //             let l = labels[toolTipItem.index];
-                //             return l;
-                //         }
-                //     }
-                // }
-            },
-            scales: {
-                xAxes: {
-                    display: false,
-                    max: data[data.length - 1],
-                },
-                xAxes2: {
-                    labels,
-                    offset: false,
-                    display: true,
-                    max: data[data.length],
-                    ticks: {
-                        autoSkip: false,
-                    },
-                    title: {
-                        display: true,
-                        text: 'Playtimes in hours'
-                    }
-                },
-                yAxes: {
-                    ticks: {
-                        beginAtZero: true,
-                    },
-                    title: {
-                        display: true,
-                        text: 'Frequency'
-                    }
-                },
-            },
-        },
-    });
-}

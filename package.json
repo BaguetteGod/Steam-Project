@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "pg": "^8.7.1",
-    "steamapi": "^2.2.0"
+    "steamapi": "^2.2.0",
+    "xhr2": "^0.2.1"
   }
 }

@@ -1,6 +1,7 @@
 const SteamAPI = require('steamapi');
 const steam = new SteamAPI('FD8B557124DE6B0353B2BA16F6A632C2');
 const fs = require('fs');
+const https = require('https');
 const mySteamID = '76561198016003691'
 
 let request = new XMLHttpRequest();
@@ -88,28 +89,6 @@ const getOwnedGames = async () => {
 }
 // getOwnedGames();
 
-// const sortedIdArray = mergeSort(idData, 'steamID');
-// console.log(sortedIdArray)
-
-// const uniqueValuesSet = new Set();
-
-// const filteredArr = sortedIdArray.filter((obj) => {
-//     // check if name property value is already in the set
-//     const isPresentInSet = uniqueValuesSet.has(obj.steamID);
-  
-//     // add name property value to Set
-//     uniqueValuesSet.add(obj.steamID);
-  
-//     // return the negated value of
-//     // isPresentInSet variable
-//     return !isPresentInSet;
-// });
-// const jsonContent = JSON.stringify(filteredArr);
-// fs.writeFile("./data/SteamIds.json", jsonContent, 'utf8', function (err) {
-//     if (err) {
-//         return console.log(err);
-//     }
-// })
 let playTimeGame = [];
 const getplayTimeByID = async () => {
     let counter = 30999;
@@ -155,8 +134,6 @@ const getplayTimeByID = async () => {
     }
     console.log('Done');
 }
-
-
 
 getMyPlayTime = async () => {
     const ownedGames = await steam.getUserOwnedGames(mySteamID);
@@ -218,3 +195,43 @@ const getSteamIDs = async () => {
     console.log(steamIdArray);
 }
 // getSteamIDs();
+
+let gameInfoArray = [];
+const getGameInfoById = async (id) => {
+    let reviews;
+    let url = `https://store.steampowered.com/appreviews/${id}?json=1&filter=recent`
+    const gameDet = await steam.getGameDetails(`${id}`);
+    gameInfoArray.push({
+        appID: gameDet.steam_appid,
+        name: gameDet.name,
+        genres: gameDet.genres,
+        platforms: gameDet.platforms,
+        categories: gameDet.categories,
+        headerImage: gameDet.header_image,
+        publishers: gameDet.publishers,
+        description: gameDet.short_description,
+        releaseDate: gameDet.release_date
+    })
+    https.get(url,(res) => {
+        let body = '';
+    
+        res.on('data', (chunk) => {
+            body += chunk;
+        });
+        res.on('end', () => {
+            try {
+                reviews = JSON.parse(body);
+                gameInfoArray[0]['reviewScore'] = reviews.query_summary.review_score_desc;
+                gameInfoArray[0]['totalNegative'] = reviews.query_summary.total_negative;
+                gameInfoArray[0]['totalPositive'] = reviews.query_summary.total_positive;
+                gameInfoArray[0]['totalReviews'] = reviews.query_summary.total_reviews;
+            } catch (error) {
+                console.error(error.message);
+            };
+        });
+    }).on('error', (error) => {
+        console.error(error.message);
+    });
+    console.log(gameInfoArray);
+}
+getGameInfoById(730);
