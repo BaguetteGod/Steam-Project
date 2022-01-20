@@ -198,6 +198,7 @@ const getSteamIDs = async () => {
 
 let gameInfoArray = [];
 const getGameInfoById = async (id) => {
+    gameInfoArray.length = 0
     let reviews;
     let url = `https://store.steampowered.com/appreviews/${id}?json=1&filter=recent`
     const gameDet = await steam.getGameDetails(`${id}`);
@@ -210,7 +211,9 @@ const getGameInfoById = async (id) => {
         headerImage: gameDet.header_image,
         publishers: gameDet.publishers,
         description: gameDet.short_description,
-        releaseDate: gameDet.release_date
+        releaseDate: gameDet.release_date,
+        background: gameDet.background,
+        screenshots: gameDet.screenshots
     })
     https.get(url,(res) => {
         let body = '';
@@ -234,4 +237,4 @@ const getGameInfoById = async (id) => {
     });
     console.log(gameInfoArray);
 }
-getGameInfoById(730);
+// getGameInfoById(730);

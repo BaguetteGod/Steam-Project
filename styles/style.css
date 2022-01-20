@@ -115,7 +115,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-    content: "";
+    content: '';
     content: none;
 }
 table {
@@ -123,12 +123,16 @@ table {
     border-spacing: 0;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 /* END OF CSS RESET */
 
 body,
 html {
     height: 100%;
-    font-family: "Arial", sans-serif;
+    font-family: 'Arial', sans-serif;
     background-color: #1b2838;
     color: #fff;
     overflow-x: hidden;
@@ -171,7 +175,7 @@ a {
 
 .navbar a:hover {
     color: #c7d5e0;
-    text-shadow:0px 0px 7px #c7d5e0;
+    text-shadow: 0px 0px 7px #c7d5e0;
 }
 
 .navbar a:first-of-type {
@@ -186,7 +190,7 @@ a {
 
 .active {
     color: #fff;
-    text-shadow:0px 0px 7px #fff;
+    text-shadow: 0px 0px 7px #fff;
     pointer-events: none;
 }
 
@@ -314,23 +318,156 @@ footer {
 
 .gameDetailsContainer {
     width: 960px;
-    margin: auto;
-    margin-top: 30px;
+    min-width: 960px;
     display: flex;
     justify-content: start;
     flex-direction: column;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    top: 30px;
+    left: calc(50% - 480px);
+    position: absolute;
+}
+
+.gameInfoBgImg {
+    width: 80%;
+    margin: auto;
+    margin-top: -30px;
+}
+
+.gameInfoGradient {
+    width: 80%;
+    min-width: 80%;
+    height: 520px;
+    margin-top: -30px;
+    left: 10%;
+    position: absolute;
+    background: rgb(22, 32, 45);
+    background: -moz-radial-gradient(circle, rgba(22, 32, 45, 0) 0%, rgba(22, 32, 45, 0.8239670868347339) 0%, rgba(22, 32, 45, 0) 100%);
+    background: -webkit-radial-gradient(circle, rgba(22, 32, 45, 0) 0%, rgba(22, 32, 45, 0.8239670868347339) 0%, rgba(22, 32, 45, 0) 100%);
+    background: radial-gradient(circle, rgba(22, 32, 45, 0) 0%, rgba(22, 32, 45, 0.8239670868347339) 0%, rgba(22, 32, 45, 0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#16202d",endColorstr="#16202d",GradientType=1);
 }
 
 .gameTitle {
     width: 100%;
     font-size: 1.5rem;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
+}
+
+.gameInfoCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(22, 32, 45, 0.6);
+    height: 500px;
+}
+
+.gameInfoLeft {
+    width: 67%;
+    display: flex;
+    flex-direction: column;
+    padding-right: 20px;
+}
+
+.gameInfoRight {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+}
+
+.gameInfoImg {
+    width: 100%;
+    object-fit: contain;
+}
+
+.gameInfoDesc {
+    width: auto;
+    padding: 10px 20px 0px 0px;
+    line-height: 1.3rem;
+    font-size: 0.9rem;
 }
 
 #myChart {
-   width: 100%; 
+    width: 100%;
 }
 
 #histogram {
     width: 100%;
+}
+
+/* Slideshow container */
+.slideshow-container {
+    width: 100%;
+    position: relative;
+    margin-left: 0px;
+}
+
+/* Hide the images by default */
+.mySlides {
+    display: none;
+    height: 350px;
+    background-color: #000000;
+}
+
+.mySlides img{
+    object-fit: cover;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+/* Next & previous buttons */
+.prev,
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+.next img {
+    height: 24px;
+}
+.prev img {
+    height: 24px;
+}
+/* Position the "next button" to the right */
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover,
+.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* The dots/bullets/indicators */
+.dot {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.current,
+.dot:hover {
+    background-color: #717171;
 }

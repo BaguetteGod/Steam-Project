@@ -25,7 +25,7 @@ let data = JSON.parse(request.responseText);
 let dataSize = data.length
 
 // JSON sorted data variables
-const names = mergeSort(data, 'name');
+const names = mergeSort(playTimeData, 'name');
 const totalPlaytime = data.reverse()
 
 // Give the navbar highlight effects + show corresponding div
@@ -122,16 +122,14 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     newContainer.addEventListener('click', function () {
         let clickedGame = this.innerText.split('\n')[0];
         clickedGameData = recBinarySearch(names, clickedGame, 'name');
-        thisGamePlayTimes = recBinarySearchID(playTimeData, clickedGameData.appID);
-        filteredPlaytimes = calcDataSpread(thisGamePlayTimes.playTimes.filter(Boolean));
+        filteredPlaytimes = calcDataSpread(clickedGameData.playTimes.filter(Boolean));
         standardDev = getStandardDeviation(filteredPlaytimes);
         median = getMedian(filteredPlaytimes);
         range = getRange(filteredPlaytimes);
-        console.log(`The standard deviation is: ${standardDev} The mean is: ${mean} The median is: ${median} The range is: ${range}`);
         hideGames();
         showGameDetails();
-        createGameChart(filteredPlaytimes);
-        createHistogram(histogramData);
+        // createGameChart(filteredPlaytimes);
+        // createHistogram(histogramData);
         gameClicked = true;
     });
     mpContainer.appendChild(newContainer);
@@ -175,14 +173,80 @@ const showGameDetails = async () => {
     gameTitle.classList.add('gameTitle')
     gameDetailsCont.appendChild(gameTitle);
 
-    const gameChart = document.createElement('canvas');
-    gameChart.setAttribute('id', 'myChart');
+    await getGameInfoById(clickedGameData.appID);
+    const gameInfoCont = document.createElement('div');
+    gameInfoCont.classList.add('gameInfoCont');
+    const gameInfoLeft = document.createElement('div');
+    gameInfoLeft.classList.add('gameInfoLeft');
+    const gameInfoRight = document.createElement('div');
+    gameInfoRight.classList.add('gameInfoRight');
+
+    const gameSlider = document.createElement('div');
+    gameSlider.classList.add('slideshow-container');
+    for(const i in gameInfoArray[0].screenshots) {
+        let source = gameInfoArray[0].screenshots[i].path_thumbnail;
+        const slideDiv = document.createElement('div');
+        slideDiv.classList.add('mySlides');
+        const slideImg = document.createElement('img')
+        slideImg.src = source;
+        slideDiv.appendChild(slideImg);
+        gameSlider.appendChild(slideDiv);
+    }
+    
+    const buttonPrev = document.createElement('a');
+    const buttonPrevImg = document.createElement('img');
+    buttonPrevImg.src = './assets/arrow-left.png';
+    buttonPrev.appendChild(buttonPrevImg);
+    buttonPrev.classList.add('prev');
+    gameSlider.appendChild(buttonPrev);
+    buttonPrev.onclick = function minSlides() {
+        showSlides((slideIndex += -1));
+    }
+    const buttonNext = document.createElement('a');
+    const buttonNextImg = document.createElement('img');
+    buttonNextImg.src = './assets/arrow-right.png';
+    buttonNext.appendChild(buttonNextImg);
+    buttonNext.classList.add('next');
+    gameSlider.appendChild(buttonNext);
+    buttonNext.onclick = function plusSlides() {
+        showSlides((slideIndex += 1));
+    }
+    gameInfoLeft.appendChild(gameSlider);
+
+    const gameInfoImg = document.createElement('img');
+    gameInfoImg.classList.add('gameInfoImg');
+    gameInfoImg.src = gameInfoArray[0].headerImage;
+    const gameInfoDesc = document.createElement('div')
+    const gameInfoDescText = document.createTextNode(gameInfoArray[0].description);
+    gameInfoDesc.appendChild(gameInfoDescText);
+    gameInfoDesc.classList.add('gameInfoDesc');
+
+    gameInfoRight.appendChild(gameInfoImg);
+    gameInfoRight.appendChild(gameInfoDesc);
+
+    gameInfoCont.appendChild(gameInfoLeft);
+    gameInfoCont.appendChild(gameInfoRight);
+
+    // const gameChart = document.createElement('canvas');
+    // gameChart.setAttribute('id', 'myChart');
     const histogram = document.createElement('canvas');
     histogram.setAttribute('id', 'histogram')
-    gameDetailsCont.appendChild(gameChart);
+    gameDetailsCont.appendChild(gameInfoCont);
+    // gameDetailsCont.appendChild(gameChart);
     gameDetailsCont.appendChild(histogram);
+    // createHistogram(histogramData);
 
+    const backgroundImg = document.createElement('img');
+    backgroundImg.src = gameInfoArray[0].background;
+    backgroundImg.classList.add('gameInfoBgImg')
+
+    const backgroundGradient = document.createElement('div');
+    backgroundGradient.classList.add('gameInfoGradient');
+
+    mpContainer.appendChild(backgroundGradient);
+    mpContainer.appendChild(backgroundImg);
     mpContainer.appendChild(gameDetailsCont);
+    showSlides(slideIndex);
 }
 
 function hideGameDetails() {
@@ -191,4 +255,28 @@ function hideGameDetails() {
         element.remove();
     });
 }
+let slideIndex = 1;
 
+function currentSlide(n) {
+    showSlides((slideIndex = n));
+}
+
+function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName('mySlides');
+    // let dots = document.getElementsByClassName('dot');
+    if (n > slides.length) {
+        slideIndex = 1;
+    }
+    if (n < 1) {
+        slideIndex = slides.length;
+    }
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = 'none';
+    }
+    // for (i = 0; i < dots.length; i++) {
+    //     dots[i].className = dots[i].className.replace(' current', '');
+    // }
+    slides[slideIndex - 1].style.display = 'block';
+    // dots[slideIndex - 1].className += ' current';
+}
