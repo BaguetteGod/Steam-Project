@@ -87,7 +87,6 @@ const getOwnedGames = async () => {
         }
     })
 }
-// getOwnedGames();
 
 let playTimeGame = [];
 const getplayTimeByID = async () => {
@@ -154,7 +153,6 @@ getMyPlayTime = async () => {
         }
     }) 
 }
-// getMyPlayTime();
 
 let steamIdArray = [];
 const getSteamIDs = async () => {
@@ -194,27 +192,26 @@ const getSteamIDs = async () => {
     })
     console.log(steamIdArray);
 }
-// getSteamIDs();
 
-let gameInfoArray = [];
 const getGameInfoById = async (id) => {
-    gameInfoArray.length = 0
+    let infoArray = []
     let reviews;
     let url = `https://store.steampowered.com/appreviews/${id}?json=1&filter=recent`
     const gameDet = await steam.getGameDetails(`${id}`);
-    gameInfoArray.push({
+    infoArray.push({
         appID: gameDet.steam_appid,
         name: gameDet.name,
         genres: gameDet.genres,
         platforms: gameDet.platforms,
         categories: gameDet.categories,
         headerImage: gameDet.header_image,
+        developers: gameDet.developers,
         publishers: gameDet.publishers,
         description: gameDet.short_description,
         releaseDate: gameDet.release_date,
         background: gameDet.background,
         screenshots: gameDet.screenshots
-    })
+    });
     https.get(url,(res) => {
         let body = '';
     
@@ -224,10 +221,10 @@ const getGameInfoById = async (id) => {
         res.on('end', () => {
             try {
                 reviews = JSON.parse(body);
-                gameInfoArray[0]['reviewScore'] = reviews.query_summary.review_score_desc;
-                gameInfoArray[0]['totalNegative'] = reviews.query_summary.total_negative;
-                gameInfoArray[0]['totalPositive'] = reviews.query_summary.total_positive;
-                gameInfoArray[0]['totalReviews'] = reviews.query_summary.total_reviews;
+                infoArray[0]['reviewScore'] = reviews.query_summary.review_score_desc;
+                infoArray[0]['totalNegative'] = reviews.query_summary.total_negative;
+                infoArray[0]['totalPositive'] = reviews.query_summary.total_positive;
+                infoArray[0]['totalReviews'] = reviews.query_summary.total_reviews;
             } catch (error) {
                 console.error(error.message);
             };
@@ -235,6 +232,6 @@ const getGameInfoById = async (id) => {
     }).on('error', (error) => {
         console.error(error.message);
     });
-    console.log(gameInfoArray);
+    console.log(infoArray);
+    return infoArray;
 }
-// getGameInfoById(730);

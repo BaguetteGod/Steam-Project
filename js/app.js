@@ -13,8 +13,10 @@ clickedGameData,
 thisGamePlayTimes, 
 mean, 
 standardDev,
+variance,
 median,
-filteredPlaytimes;
+filteredPlaytimes,
+gameInfo;
 let histogramData = [];
 let gameClicked = false;
 
@@ -119,17 +121,16 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     newOnline.classList.add('mpOnline');
     newContainer.appendChild(textContainer);
     newContainer.appendChild(newOnline);
-    newContainer.addEventListener('click', function () {
+    newContainer.addEventListener('click', async function () {
         let clickedGame = this.innerText.split('\n')[0];
         clickedGameData = recBinarySearch(names, clickedGame, 'name');
         filteredPlaytimes = calcDataSpread(clickedGameData.playTimes.filter(Boolean));
         standardDev = getStandardDeviation(filteredPlaytimes);
         median = getMedian(filteredPlaytimes);
         range = getRange(filteredPlaytimes);
+        gameInfo = await getGameInfoById(clickedGameData.appID);
         hideGames();
-        showGameDetails();
-        // createGameChart(filteredPlaytimes);
-        // createHistogram(histogramData);
+        setTimeout(showGameDetails, 600)
         gameClicked = true;
     });
     mpContainer.appendChild(newContainer);
@@ -173,7 +174,6 @@ const showGameDetails = async () => {
     gameTitle.classList.add('gameTitle')
     gameDetailsCont.appendChild(gameTitle);
 
-    await getGameInfoById(clickedGameData.appID);
     const gameInfoCont = document.createElement('div');
     gameInfoCont.classList.add('gameInfoCont');
     const gameInfoLeft = document.createElement('div');
@@ -183,14 +183,22 @@ const showGameDetails = async () => {
 
     const gameSlider = document.createElement('div');
     gameSlider.classList.add('slideshow-container');
-    for(const i in gameInfoArray[0].screenshots) {
-        let source = gameInfoArray[0].screenshots[i].path_thumbnail;
+    const dotsDiv = document.createElement('div');
+    dotsDiv.classList.add('dotCont');
+    let dotCount = 0;
+    for(const i in gameInfo[0].screenshots) {
+        let source = gameInfo[0].screenshots[i].path_thumbnail;
         const slideDiv = document.createElement('div');
         slideDiv.classList.add('mySlides');
         const slideImg = document.createElement('img')
         slideImg.src = source;
         slideDiv.appendChild(slideImg);
         gameSlider.appendChild(slideDiv);
+        const dot = document.createElement('span');
+        dot.classList.add('dot')
+        dotCount ++;
+        dot.setAttribute('onclick', `currentSlide(${dotCount})`);
+        dotsDiv.appendChild(dot);
     }
     
     const buttonPrev = document.createElement('a');
@@ -211,33 +219,75 @@ const showGameDetails = async () => {
     buttonNext.onclick = function plusSlides() {
         showSlides((slideIndex += 1));
     }
+    
     gameInfoLeft.appendChild(gameSlider);
+    gameInfoLeft.appendChild(dotsDiv);
 
     const gameInfoImg = document.createElement('img');
     gameInfoImg.classList.add('gameInfoImg');
-    gameInfoImg.src = gameInfoArray[0].headerImage;
+    gameInfoImg.src = gameInfo[0].headerImage;
     const gameInfoDesc = document.createElement('div')
-    const gameInfoDescText = document.createTextNode(gameInfoArray[0].description);
+    const gameInfoDescText = document.createTextNode(gameInfo[0].description);
     gameInfoDesc.appendChild(gameInfoDescText);
     gameInfoDesc.classList.add('gameInfoDesc');
+    const gameInfoRd = document.createElement('div');
+    const gameInfoRdText = document.createTextNode(`RELEASE DATE: ${gameInfo[0].releaseDate.date}`);
+    gameInfoRd.appendChild(gameInfoRdText);
+    gameInfoRd.classList.add('gameInfoDesc');
+    const gameInfoRevScore = document.createElement('div');
+    const gameInfoRevText = document.createTextNode(`ALL REVIEWS: ${gameInfo[0].reviewScore}`);
+    gameInfoRevScore.classList.add('gameInfoDesc');
+    gameInfoRevScore.appendChild(gameInfoRevText);
+    const gameInfoDevs = document.createElement('div');
+    const gameInfoDevText = document.createTextNode('DEVELOPERS:');
+    gameInfoDevs.classList.add('gameInfoDesc');
+    gameInfoDevs.appendChild(gameInfoDevText);
+    for(const dev in gameInfo[0].developers) {
+        let devsLength = gameInfo[0].developers.length;
+        let devText; 
+        if(dev == (devsLength - 1)) {
+            devText = document.createTextNode(` ${gameInfo[0].developers[dev]}`);
+        } else {
+           devText = document.createTextNode(` ${gameInfo[0].developers[dev]},`);
+        }
+        gameInfoDevs.appendChild(devText);
+    }
+    const gameInfoPubs = document.createElement('div');
+    const gameInfoPubText = document.createTextNode('PUBLISHERS:');
+    gameInfoPubs.classList.add('gameInfoDesc');
+    gameInfoPubs.appendChild(gameInfoPubText);
+    for(const pub in gameInfo[0].publishers) {
+        let pubsLength = gameInfo[0].publishers.length;
+        let pubText; 
+        if(pub == (pubsLength - 1)) {
+            pubText = document.createTextNode(` ${gameInfo[0].publishers[pub]}`);
+        } else {
+            pubText = document.createTextNode(` ${gameInfo[0].publishers[pub]},`);
+        }
+        gameInfoPubs.appendChild(pubText);
+    }
 
     gameInfoRight.appendChild(gameInfoImg);
     gameInfoRight.appendChild(gameInfoDesc);
+    gameInfoRight.appendChild(gameInfoRd);
+    gameInfoRight.appendChild(gameInfoRevScore);
+    gameInfoRight.appendChild(gameInfoDevs);
+    gameInfoRight.appendChild(gameInfoPubs);
 
     gameInfoCont.appendChild(gameInfoLeft);
     gameInfoCont.appendChild(gameInfoRight);
 
-    // const gameChart = document.createElement('canvas');
-    // gameChart.setAttribute('id', 'myChart');
+    const gameChart = document.createElement('canvas');
+    gameChart.setAttribute('id', 'myChart');
     const histogram = document.createElement('canvas');
     histogram.setAttribute('id', 'histogram')
     gameDetailsCont.appendChild(gameInfoCont);
-    // gameDetailsCont.appendChild(gameChart);
+    gameDetailsCont.appendChild(gameChart);
     gameDetailsCont.appendChild(histogram);
     // createHistogram(histogramData);
 
     const backgroundImg = document.createElement('img');
-    backgroundImg.src = gameInfoArray[0].background;
+    backgroundImg.src = gameInfo[0].background;
     backgroundImg.classList.add('gameInfoBgImg')
 
     const backgroundGradient = document.createElement('div');
@@ -247,6 +297,8 @@ const showGameDetails = async () => {
     mpContainer.appendChild(backgroundImg);
     mpContainer.appendChild(gameDetailsCont);
     showSlides(slideIndex);
+    setTimeout(function(){createGameChart(filteredPlaytimes)}, 500)
+    setTimeout(function(){createHistogram(histogramData)}, 500)
 }
 
 function hideGameDetails() {
@@ -258,13 +310,13 @@ function hideGameDetails() {
 let slideIndex = 1;
 
 function currentSlide(n) {
-    showSlides((slideIndex = n));
+    showSlides(slideIndex = n);
 }
 
 function showSlides(n) {
     let i;
     let slides = document.getElementsByClassName('mySlides');
-    // let dots = document.getElementsByClassName('dot');
+    let dots = document.getElementsByClassName('dot');
     if (n > slides.length) {
         slideIndex = 1;
     }
@@ -274,9 +326,9 @@ function showSlides(n) {
     for (i = 0; i < slides.length; i++) {
         slides[i].style.display = 'none';
     }
-    // for (i = 0; i < dots.length; i++) {
-    //     dots[i].className = dots[i].className.replace(' current', '');
-    // }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(' current', '');
+    }
     slides[slideIndex - 1].style.display = 'block';
-    // dots[slideIndex - 1].className += ' current';
+    dots[slideIndex - 1].className += ' current';
 }

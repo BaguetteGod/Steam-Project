@@ -1,4 +1,11 @@
 // Calculate standard deviation of an array
+function getVariance (array) {
+    const n = array.length;
+    mean = Math.floor(array.reduce((a, b) => a + b) / n);
+    return Math.floor(array.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
+}
+
+// Calculate standard deviation of an array
 function getStandardDeviation (array) {
     const n = array.length;
     mean = Math.floor(array.reduce((a, b) => a + b) / n);
@@ -29,7 +36,6 @@ function createGameChart(array) {
     let data2 = [];
     let labels = [];
     let maxVal = Math.max(...array);
-    let scaleFactor = 100;
     for(let i = 1; i < 11; i++) {
         if(i === 1) {
             labels.push(0);
@@ -40,13 +46,13 @@ function createGameChart(array) {
 
     for(x in array){
         let y = gaussian(x);
-        data2.push({ x: x, y: y * scaleFactor })
+        data2.push({ x , y })
     }
 
     function gaussian(x) {
-        let gaussianConstant = 1 / Math.sqrt(2 * Math.PI);
+        const gaussianConstant = 1 / (standardDev * Math.sqrt(2 * Math.PI));
         x = (x - mean) / standardDev;    
-        return (gaussianConstant * Math.exp(-0.5 * x * x)) / standardDev;
+        return (gaussianConstant * Math.exp(-0.5 * x * x));
     }
 
     while(data2.length > 120) data2 = data2.filter((e, i) =>  i % 2 == 0);
@@ -63,8 +69,8 @@ function createGameChart(array) {
                     borderWidth: 2,
                     showLine: true,
                     fill: true,
-                    pointRadius: 1,
-                    pointHoverRadius: 1,
+                    pointRadius: 3,
+                    pointHoverRadius: 3,
                     lineTension: 0.4
                 },
             ],
@@ -96,7 +102,7 @@ function createGameChart(array) {
                     },
                     title: {
                         display: true,
-                        text: 'What'
+                        text: 'Probability Density'
                     }
                 },
             },
