@@ -381,6 +381,28 @@ footer {
     flex-direction: column;
 }
 
+.gameInfoRightCont {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.gameInfoRightContLeft {
+    width: 35%;
+    padding: 10px 20px 0px 0px;
+    line-height: 1.3rem;
+    font-size: 0.7rem;
+    color: #556772;
+}
+
+.gameInfoRightContRight {
+    width: 65%;
+    padding: 10px 20px 0px 0px;
+    line-height: 1.3rem;
+    font-size: 0.75rem;
+    color: #51c1ea;
+}
+
 .gameInfoImg {
     width: 100%;
     object-fit: contain;
@@ -401,6 +423,11 @@ footer {
 #histogram {
     width: 100%;
     margin-top: 50px;
+}
+
+#donut {
+    padding: 50px;
+    width: 50%;
 }
 
 /* Slideshow container */

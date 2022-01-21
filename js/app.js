@@ -230,18 +230,37 @@ const showGameDetails = async () => {
     const gameInfoDescText = document.createTextNode(gameInfo[0].description);
     gameInfoDesc.appendChild(gameInfoDescText);
     gameInfoDesc.classList.add('gameInfoDesc');
-    const gameInfoRd = document.createElement('div');
-    const gameInfoRdText = document.createTextNode(`RELEASE DATE: ${gameInfo[0].releaseDate.date}`);
-    gameInfoRd.appendChild(gameInfoRdText);
-    gameInfoRd.classList.add('gameInfoDesc');
-    const gameInfoRevScore = document.createElement('div');
-    const gameInfoRevText = document.createTextNode(`ALL REVIEWS: ${gameInfo[0].reviewScore}`);
-    gameInfoRevScore.classList.add('gameInfoDesc');
-    gameInfoRevScore.appendChild(gameInfoRevText);
-    const gameInfoDevs = document.createElement('div');
-    const gameInfoDevText = document.createTextNode('DEVELOPERS:');
-    gameInfoDevs.classList.add('gameInfoDesc');
-    gameInfoDevs.appendChild(gameInfoDevText);
+    const gameInfoRightCont = document.createElement('div');
+    gameInfoRightCont.classList.add('gameInfoRightCont');
+    const gameInfoRightContLeft = document.createElement('div')
+    gameInfoRightContLeft.classList.add('gameInfoRightContLeft');
+    const gameInfoRightContRight = document.createElement('div');
+    gameInfoRightContRight.classList.add('gameInfoRightContRight');
+
+    const gameInfoRdLeft = document.createElement('div');
+    const gameInfoRdTextLeft = document.createTextNode('RELEASE DATE:');
+    gameInfoRdLeft.appendChild(gameInfoRdTextLeft);
+    gameInfoRightContLeft.appendChild(gameInfoRdLeft);
+    const gameInfoRdRight = document.createElement('div');
+    const gameInfoRdTextRight = document.createTextNode(gameInfo[0].releaseDate.date);
+    gameInfoRdRight.appendChild(gameInfoRdTextRight);
+    gameInfoRightContRight.appendChild(gameInfoRdRight);
+
+    const gameInfoRevScoreLeft = document.createElement('div');
+    const gameInfoRevTextLeft = document.createTextNode('ALL REVIEWS:');
+    gameInfoRevScoreLeft.appendChild(gameInfoRevTextLeft);
+    gameInfoRightContLeft.appendChild(gameInfoRevScoreLeft);
+    const gameInfoRevScoreRight = document.createElement('div');
+    const gameInfoRevTextRight = document.createTextNode(gameInfo[0].reviewScore);
+    gameInfoRevScoreRight.appendChild(gameInfoRevTextRight);
+    gameInfoRightContRight.appendChild(gameInfoRevScoreRight);
+
+    const gameInfoDevsLeft = document.createElement('div');
+    const gameInfoDevTextLeft = document.createTextNode('DEVELOPERS:');
+    gameInfoDevsLeft.appendChild(gameInfoDevTextLeft);
+    gameInfoRightContLeft.appendChild(gameInfoDevsLeft);
+
+    const gameInfoDevsRight = document.createElement('div');
     for(const dev in gameInfo[0].developers) {
         let devsLength = gameInfo[0].developers.length;
         let devText; 
@@ -250,12 +269,16 @@ const showGameDetails = async () => {
         } else {
            devText = document.createTextNode(` ${gameInfo[0].developers[dev]},`);
         }
-        gameInfoDevs.appendChild(devText);
+        gameInfoDevsRight.appendChild(devText);
     }
-    const gameInfoPubs = document.createElement('div');
-    const gameInfoPubText = document.createTextNode('PUBLISHERS:');
-    gameInfoPubs.classList.add('gameInfoDesc');
-    gameInfoPubs.appendChild(gameInfoPubText);
+    gameInfoRightContRight.appendChild(gameInfoDevsRight);
+
+    const gameInfoPubsLeft = document.createElement('div');
+    const gameInfoPubTextLeft = document.createTextNode('PUBLISHERS:');
+    gameInfoPubsLeft.appendChild(gameInfoPubTextLeft);
+    gameInfoRightContLeft.appendChild(gameInfoPubsLeft);
+
+    const gameInfoPubsRight = document.createElement('div');
     for(const pub in gameInfo[0].publishers) {
         let pubsLength = gameInfo[0].publishers.length;
         let pubText; 
@@ -264,27 +287,30 @@ const showGameDetails = async () => {
         } else {
             pubText = document.createTextNode(` ${gameInfo[0].publishers[pub]},`);
         }
-        gameInfoPubs.appendChild(pubText);
+        gameInfoPubsRight.appendChild(pubText);
     }
+    gameInfoRightContRight.appendChild(gameInfoPubsRight);
+
+    gameInfoRightCont.appendChild(gameInfoRightContLeft);
+    gameInfoRightCont.appendChild(gameInfoRightContRight);
 
     gameInfoRight.appendChild(gameInfoImg);
     gameInfoRight.appendChild(gameInfoDesc);
-    gameInfoRight.appendChild(gameInfoRd);
-    gameInfoRight.appendChild(gameInfoRevScore);
-    gameInfoRight.appendChild(gameInfoDevs);
-    gameInfoRight.appendChild(gameInfoPubs);
+    gameInfoRight.appendChild(gameInfoRightCont);
 
     gameInfoCont.appendChild(gameInfoLeft);
     gameInfoCont.appendChild(gameInfoRight);
 
+    const donutChart = document.createElement('canvas');
+    donutChart.setAttribute('id', 'donut');
     const gameChart = document.createElement('canvas');
     gameChart.setAttribute('id', 'myChart');
     const histogram = document.createElement('canvas');
     histogram.setAttribute('id', 'histogram')
     gameDetailsCont.appendChild(gameInfoCont);
+    gameDetailsCont.appendChild(donutChart);
     gameDetailsCont.appendChild(gameChart);
     gameDetailsCont.appendChild(histogram);
-    // createHistogram(histogramData);
 
     const backgroundImg = document.createElement('img');
     backgroundImg.src = gameInfo[0].background;
@@ -297,6 +323,7 @@ const showGameDetails = async () => {
     mpContainer.appendChild(backgroundImg);
     mpContainer.appendChild(gameDetailsCont);
     showSlides(slideIndex);
+    setTimeout(function(){createDonutChart(gameInfo[0].totalPositive, gameInfo[0].totalNegative)}, 500)
     setTimeout(function(){createGameChart(filteredPlaytimes)}, 500)
     setTimeout(function(){createHistogram(histogramData)}, 500)
 }

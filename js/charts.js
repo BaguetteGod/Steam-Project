@@ -31,6 +31,33 @@ function getRange (array) {
     return Math.floor(max - min);
 }
 
+// Create donut chart for reviews
+function createDonutChart (posRev, negRev) {
+    let labels = ['Positive Reviews', 'Negative Reviews']
+    let ctx = document.getElementById('donut').getContext('2d');
+    let myDonutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    labels: 'Reviews',
+                    data: [posRev, negRev],
+                    backgroundColor: [
+                        'rgba(2, 119, 189, 1)',
+                        'rgba(221, 44, 0, 1)'
+                    ],
+                    borderColor: [
+                        'rgba(2, 119, 189, 1)',
+                        'rgba(221, 44, 0, 1)'
+                    ],
+                    hoverOffset: 4
+                },
+            ],
+        }
+    })
+}
+
 // Create gaussian distribution chart for game
 function createGameChart(array) {
     let data2 = [];
@@ -243,3 +270,4 @@ function createHistogram(dict) {
         },
     });
 }
+

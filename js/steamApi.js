@@ -196,7 +196,7 @@ const getSteamIDs = async () => {
 const getGameInfoById = async (id) => {
     let infoArray = []
     let reviews;
-    let url = `https://store.steampowered.com/appreviews/${id}?json=1&filter=recent`
+    let url = `https://store.steampowered.com/appreviews/${id}?json=1&language=all`
     const gameDet = await steam.getGameDetails(`${id}`);
     infoArray.push({
         appID: gameDet.steam_appid,
