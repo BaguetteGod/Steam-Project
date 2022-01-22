@@ -128,7 +128,6 @@ table {
 }
 
 /* END OF CSS RESET */
-
 body,
 html {
     height: 100%;
@@ -223,7 +222,7 @@ footer {
     display: flex;
 }
 
-#planning {
+#myGames {
     display: none;
 }
 
@@ -236,8 +235,7 @@ footer {
 }
 
 /* END OF BASIC APP STYLING */
-/* MOST PLAYED LIST STYLING */
-
+/* CATEGORY CONTAINERS */
 #mpContainer {
     margin: auto;
     padding: 30px 30px 20px 30px;
@@ -248,6 +246,37 @@ footer {
     flex-wrap: wrap;
 }
 
+#myGamesContainer {
+    margin: auto;
+    padding: 30px 30px 20px 30px;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#recomContainer {
+    margin: auto;
+    padding: 30px 30px 20px 30px;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#friendsContainer {
+    margin: auto;
+    padding: 30px 30px 20px 30px;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+/* MOST PLAYED STYLING */
 .gameContainer {
     background-color: #16202d;
     display: flex;
@@ -304,18 +333,7 @@ footer {
     text-align: right;
 }
 
-#recomContainer {
-    margin: auto;
-    padding: 30px 0 0 30px;
-    display: flex;
-    width: 100%;
-    justify-content: flex-start;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
 /* MOST PLAYED GAME DETAILS STYLING */
-
 .gameDetailsContainer {
     width: 960px;
     min-width: 960px;
@@ -426,7 +444,7 @@ footer {
 }
 
 #donut {
-    padding: 50px;
+    margin-top: 50px;
     width: 50%;
 }
 
@@ -511,3 +529,6 @@ footer {
 .dot:hover {
     background-color: #717171;
 }
+
+
+/* MY GAMES STYLING */

@@ -134,6 +134,28 @@ const getplayTimeByID = async () => {
     console.log('Done');
 }
 
+// let additionalInfo = mergeSort(playTimeData, 'totalPlayTime').reverse();
+const addGameInfoPlayTime = async () => {
+    for(let i = 0; i < 101; i++){
+        let currentAPP = additionalInfo[i];
+        let currentAppID = additionalInfo[i].appID;
+        try {
+            const gameDetails = await steam.getGameDetails(`${currentAppID}`);
+            currentAPP['platforms'] = gameDetails.platforms;
+            currentAPP['headerImage'] = gameDetails.header_image
+        } catch (e) {
+            console.error(e)
+        } 
+    }
+    const jsonContent = JSON.stringify(additionalInfo);
+    fs.writeFile("./data/playTimeData.json", jsonContent, 'utf8', function (err) {
+        if (err) {
+            return console.log(err);
+        }
+    })
+    console.log(additionalInfo);
+}
+
 getMyPlayTime = async () => {
     const ownedGames = await steam.getUserOwnedGames(mySteamID);
     for(const i in ownedGames){

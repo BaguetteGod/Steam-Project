@@ -2,11 +2,13 @@
 const navContainer = document.getElementById('navContainer');
 const navElements = navContainer.getElementsByClassName('navElement');
 const mpContainer = document.getElementById('mpContainer');
-const gameContainers = mpContainer.getElementsByClassName('gameContainer')
+const myGamesContainer = document.getElementById('myGamesContainer');
+const backArrow = document.getElementById('navBack');
+const gameContainers = mpContainer.getElementsByClassName('gameContainer');
 const regex = /;/g;
 
-let divs = ['mostplayed', 'planning', 'recommended', 'friends'];
-let visibleId = null;
+let divs = ['mostPlayed', 'myGames', 'recommended', 'friends'];
+let visibleId = 'mostPlayed';
 let priceText, 
 playtimeText, 
 clickedGameData, 
@@ -19,6 +21,10 @@ filteredPlaytimes,
 gameInfo;
 let histogramData = [];
 let gameClicked = false;
+let navMpClicked = false;
+let navMyGamesClicked = false;
+let navRecomClicked = false;
+let navFriendsClicked = false;
 
 // Load JSON file
 request.open('GET', './data/myGames.json', false);
@@ -40,12 +46,45 @@ for (let i = 0; i < navElements.length; i++) {
     })
 }
 
+backArrow.addEventListener('click', function () {
+    if(gameClicked === true) {
+        gameClicked = false
+        if(visibleId === 'mostPlayed') {
+            hideMainContent();
+            showMostPlayedGames();
+        }else if(visibleId === 'myGames') {
+            hideMainContent();
+            showMyGames();
+        }
+    } else {
+        return;
+    }
+})
+
 // Function to show div within maincontent
 function show(id) {
     if (visibleId !== id) {
         visibleId = id;
+        if(visibleId === 'mostPlayed') {
+            navMpClicked = true;
+            navMyGamesClicked = false;
+            navRecomClicked = false;
+            navFriendsClicked = false;
+        }else if (visibleId === 'myGames') {
+            navMyGamesClicked = true
+            navMpClicked = false;
+            navRecomClicked = false;
+            navFriendsClicked = false;
+        }  
     }
     hide();
+    if(visibleId === 'mostPlayed'){
+        hideMainContent();
+        showMostPlayedGames();
+    } else if (visibleId === 'myGames') {
+        hideMainContent();
+        showMyGames();
+    }
 }
 
 // Function to hide other divs within maincontent
@@ -106,10 +145,10 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     textContainer.appendChild(platformLogos);
 
     const newPlaytime = document.createElement('div');
-    if (playtime !== 0) {
+    if(visibleId === 'mostPlayed') {
+        playtimeText = document.createTextNode(`Community playtime: ${Math.floor(playtime / 60)} hours`);
+    }else{
         playtimeText = document.createTextNode(`Total playtime: ${Math.floor(playtime / 60)} hours`);
-    } else {
-        playtimeText = document.createTextNode(`Total playtime: ${playtime} hours`);
     }
     newPlaytime.appendChild(playtimeText);
     newPlaytime.classList.add('mpInfo');
@@ -129,38 +168,70 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         median = getMedian(filteredPlaytimes);
         range = getRange(filteredPlaytimes);
         gameInfo = await getGameInfoById(clickedGameData.appID);
-        hideGames();
+        hideMainContent();
         setTimeout(showGameDetails, 600)
         gameClicked = true;
     });
-    mpContainer.appendChild(newContainer);
+    if(visibleId === 'mostPlayed') {
+        mpContainer.appendChild(newContainer);
+    } else if(visibleId === 'myGames') {
+        myGamesContainer.appendChild(newContainer)
+    }
+    
 }
 
-// Function to dynamically add data to maincontent
-const showGames = async () => {
+// Function to dynamically add data to most played games maincontent
+const showMostPlayedGames = async () => {
+    for (let i = 0; i < 50; i++) {
+        if(gameClicked === true) return;
+        if(navMyGamesClicked === true) return;
+        let platform = 0;
+        for (const j in playTimeData[i].platforms) {
+            if (playTimeData[i].platforms[j] === true)
+            platform ++;
+        }
+        let name = playTimeData[i].name;
+        let timePlayed = playTimeData[i].totalPlayTime;
+        let imgSource = playTimeData[i].headerImage;
+        let app = playTimeData[i].appID;
+        let current = await currentPlayersOnline(app);
+        if(navMyGamesClicked === true) return;
+        addInfo(name, timePlayed, current, platform, imgSource);
+    }
+}
+showMostPlayedGames();
+
+// Function to dynamically add data to my games maincontent
+const showMyGames = async () => {
     for (const i in totalPlaytime) {
         if(gameClicked === true) return;
+        if(navMpClicked === true) return;
         let platform = 0;
         for (const j in totalPlaytime[i].platforms) {
             if (totalPlaytime[i].platforms[j] === true)
-            platform ++
+            platform ++;
         }
         let name = totalPlaytime[i].name;
         let timePlayed = totalPlaytime[i].playTime;
         let imgSource = totalPlaytime[i].headerImage;
         let app = totalPlaytime[i].appID;
         let current = await currentPlayersOnline(app);
+        if(navMpClicked === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
     }
 }
-showGames();
 
-// Function to hide most played games
-function hideGames() {
-    let games = mpContainer.querySelectorAll('a');
-    games.forEach(element => {
-        element.remove();
-    });
+// Function to hide content in main
+function hideMainContent() {
+    if(visibleId === 'mostPlayed') {
+        while (mpContainer.firstChild) {
+            mpContainer.removeChild(mpContainer.lastChild);
+          }
+    } else if(visibleId === 'myGames'){
+        while (myGamesContainer.firstChild) {
+            myGamesContainer.removeChild(myGamesContainer.lastChild);
+          }
+    }
 }
 
 // Function to show details of clicked game in most played
@@ -319,21 +390,22 @@ const showGameDetails = async () => {
     const backgroundGradient = document.createElement('div');
     backgroundGradient.classList.add('gameInfoGradient');
 
-    mpContainer.appendChild(backgroundGradient);
-    mpContainer.appendChild(backgroundImg);
-    mpContainer.appendChild(gameDetailsCont);
+    if(visibleId === 'mostPlayed') {
+        mpContainer.appendChild(backgroundGradient);
+        mpContainer.appendChild(backgroundImg);
+        mpContainer.appendChild(gameDetailsCont);
+    } else if(visibleId === 'myGames') {
+        myGamesContainer.appendChild(backgroundGradient);
+        myGamesContainer.appendChild(backgroundImg);
+        myGamesContainer.appendChild(gameDetailsCont);
+    }
     showSlides(slideIndex);
     setTimeout(function(){createDonutChart(gameInfo[0].totalPositive, gameInfo[0].totalNegative)}, 500)
     setTimeout(function(){createGameChart(filteredPlaytimes)}, 500)
     setTimeout(function(){createHistogram(histogramData)}, 500)
 }
 
-function hideGameDetails() {
-    let gameDetailsCont = mpContainer.querySelectorAll('div');
-    gameDetailsCont.forEach(element =>{
-        element.remove();
-    });
-}
+// Slider for game details functionality
 let slideIndex = 1;
 
 function currentSlide(n) {
