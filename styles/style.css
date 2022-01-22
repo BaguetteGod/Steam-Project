@@ -135,6 +135,23 @@ html {
     background-color: #1b2838;
     color: #fff;
     overflow-x: hidden;
+    --scrollbarBG: #1b2838;
+    --thumbBG: #434953;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbarBG); 
+  }
+::-webkit-scrollbar-track {
+    background: var(--scrollbarBG);
+}
+::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    border-radius: 6px;
+    border: 3px solid var(--scrollbarBG);
 }
 
 a {
@@ -462,7 +479,7 @@ footer {
     background-color: #000000;
 }
 
-.mySlides img{
+.mySlides img {
     object-fit: cover;
     width: 100%;
     position: absolute;
@@ -529,6 +546,5 @@ footer {
 .dot:hover {
     background-color: #717171;
 }
-
 
 /* MY GAMES STYLING */

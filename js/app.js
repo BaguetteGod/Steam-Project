@@ -46,6 +46,7 @@ for (let i = 0; i < navElements.length; i++) {
     })
 }
 
+// Event listener for the back arrow
 backArrow.addEventListener('click', function () {
     if(gameClicked === true) {
         gameClicked = false
