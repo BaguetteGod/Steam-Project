@@ -71,7 +71,7 @@ ufw default allow outgoing
 
 # Allowed ports
 ufw allow SSH
-ufw allow 80
+# ufw allow 80
 ufw allow 443
 ufw allow VNC
 ufw allow icmp
