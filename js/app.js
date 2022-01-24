@@ -64,6 +64,8 @@ backArrow.addEventListener('click', function () {
 
 // Function to show div within maincontent
 function show(id) {
+    gameClicked = false;
+    hideMainContent();
     if (visibleId !== id) {
         visibleId = id;
         if(visibleId === 'mostPlayed') {
@@ -409,18 +411,50 @@ const showGameDetails = async () => {
     gameStatsPlayersNowTitle.classList.add('gameStatsInnerTextTitle');
     innerGameStatsLeft.appendChild(gameStatsPlayersNowTitle);
 
+    const gameStatsOwners = document.createElement('div');
+    const gameStatsOwnersText = document.createTextNode(`${clickedGameData.owners.toLocaleString()}`);
+    gameStatsOwners.appendChild(gameStatsOwnersText);
+    gameStatsOwners.classList.add('gameStatsInnerTextStats');
+    innerGameStatsLeft.appendChild(gameStatsOwners);
+    const gameStatsOwnersTitle = document.createElement('div');
+    const gameStatsOwnersTitleText = document.createTextNode('game owners');
+    gameStatsOwnersTitle.appendChild(gameStatsOwnersTitleText);
+    gameStatsOwnersTitle.classList.add('gameStatsInnerTextTitle');
+    innerGameStatsLeft.appendChild(gameStatsOwnersTitle);
+
+    const gameStatsReviewsPercent = document.createElement('div');
+    const gameStatsReviewsPercentText = document.createTextNode(`${(gameInfo[0].totalPositive / gameInfo[0].totalReviews * 100).toFixed(2)}%`)
+    gameStatsReviewsPercent.appendChild(gameStatsReviewsPercentText);
+    gameStatsReviewsPercent.classList.add('gameStatsInnerTextStats');
+    innerGameStatsLeft.appendChild(gameStatsReviewsPercent);
+    const gameStatsReviewsPercentTitle = document.createElement('div');
+    const gameStatsReviewsPercentTitleText = document.createTextNode('positive reviews');
+    gameStatsReviewsPercentTitle.appendChild(gameStatsReviewsPercentTitleText);
+    gameStatsReviewsPercentTitle.classList.add('gameStatsInnerTextTitle');
+    innerGameStatsLeft.appendChild(gameStatsReviewsPercentTitle);
+
     gameStats.appendChild(innerGameStatsRight);
     const donutChart = document.createElement('canvas');
     donutChart.setAttribute('id', 'donut');
     innerGameStatsRight.appendChild(donutChart);
+    const gameChartTitle = document.createElement('div');
+    const gameChartTitleText = document.createTextNode('Playtime distribution');
+    gameChartTitle.appendChild(gameChartTitleText);
+    gameChartTitle.classList.add('gameStatsTitle')
     const gameChart = document.createElement('canvas');
     gameChart.setAttribute('id', 'myChart');
+    const histogramTitle = document.createElement('div');
+    const histogramTitleText = document.createTextNode('Playtime frequency');
+    histogramTitle.appendChild(histogramTitleText);
+    histogramTitle.classList.add('gameStatsTitle');
     const histogram = document.createElement('canvas');
     histogram.setAttribute('id', 'histogram')
     gameDetailsCont.appendChild(gameInfoCont);
     gameDetailsCont.appendChild(gameStatsTitle);
     gameDetailsCont.appendChild(gameStats);
+    gameDetailsCont.appendChild(gameChartTitle);
     gameDetailsCont.appendChild(gameChart);
+    gameDetailsCont.appendChild(histogramTitle);
     gameDetailsCont.appendChild(histogram);
 
     const backgroundImg = document.createElement('img');

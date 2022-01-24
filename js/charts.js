@@ -58,6 +58,20 @@ function createDonutChart (posRev, negRev) {
     })
 }
 
+const meanLine = {
+    id: 'meanLine',
+    beforeDraw(chart, args, options) {
+        const { ctx, chartArea: { top, right, bottom, left, width, height }, scales: {x, y} } = chart;
+        ctx.save();
+        ctx.strokeStyle = '#c7d5e0';
+        ctx.strokeRect(x.getPixelForValue(mean), top, 1, height);
+        ctx.fillStyle = '#c7d5e0';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Mean: ${mean.toLocaleString()}`, x.getPixelForValue(mean), top -10, height+30)
+        ctx.restore();
+    }
+}
+
 // Create gaussian distribution chart for game
 function createGameChart(array) {
     let data2 = [];
@@ -106,7 +120,10 @@ function createGameChart(array) {
             plugins: {
                 legend: {
                   display: false
-                }
+                },
+            },
+            layout: {
+                padding: 20
             },
             scales: {
                 x: {
@@ -116,24 +133,29 @@ function createGameChart(array) {
                     max: Math.ceil(maxVal),
                     ticks: {
                         autoSkip: false,
-                        stepSize: Math.ceil(maxVal*0.05)
+                        stepSize: Math.ceil(maxVal*0.05),
+                        color: '#c7d5e0'
                     },
                     title: {
                         display: true,
-                        text: 'Playtimes in hours'
+                        text: 'Playtimes in hours',
+                        color: '#c7d5e0'
                     }
                 },
                 y: {
                     ticks: {
                         beginAtZero: true,
+                        color: '#c7d5e0'
                     },
                     title: {
                         display: true,
-                        text: 'Probability Density'
+                        text: 'Probability Density',
+                        color: '#c7d5e0'
                     }
                 },
             },
         },
+        plugins: [meanLine]
     });
 }
 
@@ -252,19 +274,23 @@ function createHistogram(dict) {
                     display: true,
                     ticks: {
                         autoSkip: false,
+                        color: '#c7d5e0'
                     },
                     title: {
                         display: true,
-                        text: 'Playtimes in hours'
+                        text: 'Playtimes in hours',
+                        color: '#c7d5e0'
                     }
                 },
                 y: {
                     ticks: {
                         beginAtZero: true,
+                        color: '#c7d5e0'
                     },
                     title: {
                         display: true,
-                        text: 'Frequency'
+                        text: 'Frequency',
+                        color: '#c7d5e0'
                     }
                 },
             },
