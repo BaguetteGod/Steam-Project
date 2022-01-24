@@ -147,16 +147,16 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
 
     const newPlaytime = document.createElement('div');
     if(visibleId === 'mostPlayed') {
-        playtimeText = document.createTextNode(`Community playtime: ${Math.floor(playtime / 60)} hours`);
+        playtimeText = document.createTextNode(`Community playtime: ${Math.floor(playtime / 60).toLocaleString()} hours`);
     }else{
-        playtimeText = document.createTextNode(`Total playtime: ${Math.floor(playtime / 60)} hours`);
+        playtimeText = document.createTextNode(`Total playtime: ${Math.floor(playtime / 60).toLocaleString()} hours`);
     }
     newPlaytime.appendChild(playtimeText);
     newPlaytime.classList.add('mpInfo');
     textContainer.appendChild(newPlaytime);
 
     const newOnline = document.createElement('div');
-    const onlineText = document.createTextNode(`Players Online: ${currentOnline}`);
+    const onlineText = document.createTextNode(`Players Online: ${currentOnline.toLocaleString()}`);
     newOnline.appendChild(onlineText);
     newOnline.classList.add('mpOnline');
     newContainer.appendChild(textContainer);
@@ -235,8 +235,9 @@ function hideMainContent() {
     }
 }
 
-// Function to show details of clicked game in most played
+// Function to show details of clicked game in most played or my games
 const showGameDetails = async () => {
+    let playersNow;
     const gameDetailsCont = document.createElement('div');
     gameDetailsCont.classList.add('gameDetailsContainer');
 
@@ -373,14 +374,52 @@ const showGameDetails = async () => {
     gameInfoCont.appendChild(gameInfoLeft);
     gameInfoCont.appendChild(gameInfoRight);
 
+    const gameStatsTitle = document.createElement('div')
+    const gameStatsTitleText = document.createTextNode('Game stats');
+    gameStatsTitle.appendChild(gameStatsTitleText);
+    gameStatsTitle.classList.add('gameStatsTitle');
+    const gameStats = document.createElement('div');
+    gameStats.classList.add('gameStatsCont');
+    const innerGameStatsLeft = document.createElement('div');
+    innerGameStatsLeft.classList.add('innerGameStats');
+    const innerGameStatsRight = document.createElement('div');
+    innerGameStatsRight.classList.add('innerGameStats');
+    gameStats.appendChild(innerGameStatsLeft);
+
+    const gameStatsPlayTimeCount = document.createElement('div');
+    const gameStatsPlayTimeCountText = document.createTextNode(`${Math.floor(clickedGameData.totalPlayTime / 60).toLocaleString()}`);
+    gameStatsPlayTimeCount.appendChild(gameStatsPlayTimeCountText);
+    gameStatsPlayTimeCount.classList.add('gameStatsInnerTextStats');
+    innerGameStatsLeft.appendChild(gameStatsPlayTimeCount);
+    const gameStatsPlayTime = document.createElement('div');
+    const gameStatsPlayTimeText = document.createTextNode('hours of community playtime')
+    gameStatsPlayTime.appendChild(gameStatsPlayTimeText);
+    gameStatsPlayTime.classList.add('gameStatsInnerTextTitle');
+    innerGameStatsLeft.appendChild(gameStatsPlayTime);
+
+    playersNow = await currentPlayersOnline(gameInfo[0].appID)
+    const gameStatsPlayersNow = document.createElement('div');
+    const gameStatsPlayersNowText = document.createTextNode(`${playersNow.toLocaleString()}`);
+    gameStatsPlayersNow.appendChild(gameStatsPlayersNowText);
+    gameStatsPlayersNow.classList.add('gameStatsInnerTextStats');
+    innerGameStatsLeft.appendChild(gameStatsPlayersNow);
+    const gameStatsPlayersNowTitle = document.createElement('div');
+    const gameStatsPlayersNowTitleText = document.createTextNode('players online right now');
+    gameStatsPlayersNowTitle.appendChild(gameStatsPlayersNowTitleText);
+    gameStatsPlayersNowTitle.classList.add('gameStatsInnerTextTitle');
+    innerGameStatsLeft.appendChild(gameStatsPlayersNowTitle);
+
+    gameStats.appendChild(innerGameStatsRight);
     const donutChart = document.createElement('canvas');
     donutChart.setAttribute('id', 'donut');
+    innerGameStatsRight.appendChild(donutChart);
     const gameChart = document.createElement('canvas');
     gameChart.setAttribute('id', 'myChart');
     const histogram = document.createElement('canvas');
     histogram.setAttribute('id', 'histogram')
     gameDetailsCont.appendChild(gameInfoCont);
-    gameDetailsCont.appendChild(donutChart);
+    gameDetailsCont.appendChild(gameStatsTitle);
+    gameDetailsCont.appendChild(gameStats);
     gameDetailsCont.appendChild(gameChart);
     gameDetailsCont.appendChild(histogram);
 

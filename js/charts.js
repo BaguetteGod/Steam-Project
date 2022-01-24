@@ -141,6 +141,7 @@ function createGameChart(array) {
 function calcDataSpread (array) {
     let maxValue = Math.max(...array) / 60;
     let newArray = [];
+    histogramData.length = 0;
     for(const k in array){
         let cvOne = array[k] / 60;
         if (cvOne >= 0 && cvOne <= (maxValue * 0.1)) {
