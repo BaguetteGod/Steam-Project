@@ -443,6 +443,70 @@ const showGameDetails = async () => {
     gameChartTitle.classList.add('gameStatsTitle')
     const gameChart = document.createElement('canvas');
     gameChart.setAttribute('id', 'myChart');
+
+    const statisticalDisp = document.createElement('div');
+    const statisticalDispText = document.createTextNode('Statistical Dispersion');
+    statisticalDisp.appendChild(statisticalDispText);
+    statisticalDisp.classList.add('gameStatsTitle')
+    const statDispCont = document.createElement('div');
+    statDispCont.classList.add('gameStatsContTwo');
+    const statDispInner = document.createElement('div');
+    statDispInner.classList.add('innerGameStatsTwo');
+    statDispCont.appendChild(statDispInner);
+    const statDispInnerTwo = document.createElement('div');
+    statDispInnerTwo.classList.add('innerGameStatsTwo');
+    statDispCont.appendChild(statDispInnerTwo);
+    const statDispInnerThree = document.createElement('div');
+    statDispInnerThree.classList.add('innerGameStatsTwo');
+    statDispCont.appendChild(statDispInnerThree);
+    const statDispInnerFour = document.createElement('div');
+    statDispInnerFour.classList.add('innerGameStatsTwo');
+    statDispCont.appendChild(statDispInnerFour);
+
+    const statRange = document.createElement('div');
+    const statRangeText = document.createTextNode(`${range.toLocaleString()}`);
+    statRange.appendChild(statRangeText);
+    statRange.classList.add('gameStatsInnerTextStats');
+    statDispInner.appendChild(statRange);
+    const statRangeTitle = document.createElement('div');
+    const statRangeTitleText = document.createTextNode('playtime range');
+    statRangeTitle.appendChild(statRangeTitleText);
+    statRangeTitle.classList.add('gameStatsInnerTextTitleTwo')
+    statDispInner.appendChild(statRangeTitle);
+
+    const statDeviation = document.createElement('div');
+    const statDeviationText = document.createTextNode(`${standardDev.toLocaleString()}`);
+    statDeviation.appendChild(statDeviationText);
+    statDeviation.classList.add('gameStatsInnerTextStats');
+    statDispInnerTwo.appendChild(statDeviation);
+    const statDeviationTitle = document.createElement('div');
+    const statDeviationTitleText = document.createTextNode('standard deviation');
+    statDeviationTitle.appendChild(statDeviationTitleText);
+    statDeviationTitle.classList.add('gameStatsInnerTextTitleTwo');
+    statDispInnerTwo.appendChild(statDeviationTitle);
+
+    const statAveragePlay = document.createElement('div');
+    const statAveragePlayText = document.createTextNode(`${mean.toLocaleString()}`);
+    statAveragePlay.appendChild(statAveragePlayText);
+    statAveragePlay.classList.add('gameStatsInnerTextStats');
+    statDispInnerThree.appendChild(statAveragePlay);
+    const statAveragePlayTitle = document.createElement('div');
+    const statAveragePlayTitleText = document.createTextNode('average playtime');
+    statAveragePlayTitle.appendChild(statAveragePlayTitleText);
+    statAveragePlayTitle.classList.add('gameStatsInnerTextTitleTwo');
+    statDispInnerThree.appendChild(statAveragePlayTitle);
+
+    const statMedianPlay = document.createElement('div');
+    const statMedianPlayText = document.createTextNode(`${Math.floor(median).toLocaleString()}`);
+    statMedianPlay.appendChild(statMedianPlayText);
+    statMedianPlay.classList.add('gameStatsInnerTextStats');
+    statDispInnerFour.appendChild(statMedianPlay);
+    const statMedianPlayTitle = document.createElement('div');
+    const statMedianPlayTitleText = document.createTextNode('median playtime');
+    statMedianPlayTitle.appendChild(statMedianPlayTitleText);
+    statMedianPlayTitle.classList.add('gameStatsInnerTextTitleTwo');
+    statDispInnerFour.appendChild(statMedianPlayTitle);
+
     const histogramTitle = document.createElement('div');
     const histogramTitleText = document.createTextNode('Playtime frequency');
     histogramTitle.appendChild(histogramTitleText);
@@ -454,6 +518,8 @@ const showGameDetails = async () => {
     gameDetailsCont.appendChild(gameStats);
     gameDetailsCont.appendChild(gameChartTitle);
     gameDetailsCont.appendChild(gameChart);
+    gameDetailsCont.appendChild(statisticalDisp);
+    gameDetailsCont.appendChild(statDispCont);
     gameDetailsCont.appendChild(histogramTitle);
     gameDetailsCont.appendChild(histogram);
 

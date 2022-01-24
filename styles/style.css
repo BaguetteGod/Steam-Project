@@ -363,6 +363,7 @@ footer {
     top: 50px;
     left: calc(50% - 480px);
     position: absolute;
+    padding-bottom: 20px;
 }
 
 .gameInfoBgImg {
@@ -561,8 +562,23 @@ footer {
     border-radius: 5px;
 }
 
+.gameStatsContTwo {
+    background-color: #16202d;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 30px;
+    border-radius: 5px;
+    justify-content: space-between;
+}
+
 .innerGameStats {
     width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.innerGameStatsTwo {
     display: flex;
     flex-direction: column;
 }
@@ -572,6 +588,12 @@ footer {
     font-size: 1rem;
     color: #c7d5e0;
     margin-bottom: 40px;
+}
+
+.gameStatsInnerTextTitleTwo {
+    width: 100%;
+    font-size: 1rem;
+    color: #c7d5e0;
 }
 
 .gameStatsInnerTextStats {
