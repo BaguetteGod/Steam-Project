@@ -58,6 +58,7 @@ function createDonutChart (posRev, negRev) {
     })
 }
 
+// Create vertical line for the mean in playtime distibution chart
 const meanLine = {
     id: 'meanLine',
     beforeDraw(chart, args, options) {
@@ -67,6 +68,7 @@ const meanLine = {
         ctx.strokeRect(x.getPixelForValue(mean), top, 1, height);
         ctx.fillStyle = '#c7d5e0';
         ctx.textAlign = 'center';
+        ctx.font = '15px Arial'; 
         ctx.fillText(`Mean: ${mean.toLocaleString()}`, x.getPixelForValue(mean), top -10, height+30)
         ctx.restore();
     }
@@ -123,7 +125,9 @@ function createGameChart(array) {
                 },
             },
             layout: {
-                padding: 20
+                padding: {
+                    top: 35
+                }
             },
             scales: {
                 x: {

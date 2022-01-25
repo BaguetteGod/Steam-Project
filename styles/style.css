@@ -363,7 +363,7 @@ footer {
     top: 50px;
     left: calc(50% - 480px);
     position: absolute;
-    padding-bottom: 20px;
+    padding-bottom: 50px;
 }
 
 .gameInfoBgImg {
@@ -601,4 +601,101 @@ footer {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 10px;
+}
+
+/* CSS FOR FRIENDS TAB */
+#friendsOnline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    color: white;
+    font-size: 1.3rem;
+    width: 100%;
+}
+
+#friendsOffline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    color: white;
+    font-size: 1.3rem;
+    width: 100%;
+}
+
+.textOnline,
+.textOffline {
+    width: 100%;
+    font-size: 1.5rem;
+    color: #c7d5e0;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.friendCont {
+    width: 30%;
+    background-color: #16202d;
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.friendCont:hover {
+    background-color: #101822;
+}
+
+.friendImage {
+    width: 100px;
+    object-fit: cover;
+}
+
+.friendInfoCont {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.friendName {
+    width: 100%;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #51c1ea;
+}
+
+.friendStatus {
+    width: 100%;
+    font-size: 1rem;
+    color: #51c1ea;
+    padding-top: 10px;
+}
+
+.friendNameOffline {
+    width: 100%;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #556772;
+}
+
+.friendStatusOffline {
+    width: 100%;
+    font-size: 1rem;
+    color: #556772;
+    padding-top: 10px;
+}
+
+.friendNameOther {
+    width: 100%;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #51c1ea;
+    opacity: 0.7;
+}
+
+.friendStatusOther {
+    width: 100%;
+    font-size: 1rem;
+    color: #51c1ea;
+    padding-top: 10px;
+    opacity: 0.7;
 }

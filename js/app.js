@@ -1,3 +1,5 @@
+const steamapi = require("steamapi");
+
 // Variables
 const navContainer = document.getElementById('navContainer');
 const navElements = navContainer.getElementsByClassName('navElement');
@@ -5,7 +7,9 @@ const mpContainer = document.getElementById('mpContainer');
 const myGamesContainer = document.getElementById('myGamesContainer');
 const backArrow = document.getElementById('navBack');
 const gameContainers = mpContainer.getElementsByClassName('gameContainer');
-const regex = /;/g;
+const friendsContainer = document.getElementById('friendsContainer');
+const friendsOnline = document.getElementById('friendsOnline');
+const friendsOffline = document.getElementById('friendsOffline');
 
 let divs = ['mostPlayed', 'myGames', 'recommended', 'friends'];
 let visibleId = 'mostPlayed';
@@ -30,7 +34,10 @@ let navFriendsClicked = false;
 request.open('GET', './data/myGames.json', false);
 request.send(null);
 let data = JSON.parse(request.responseText);
-let dataSize = data.length
+
+request.open('GET', './data/myFriends.json', false);
+request.send(null);
+let friendsData = JSON.parse(request.responseText);
 
 // JSON sorted data variables
 const names = mergeSort(playTimeData, 'name');
@@ -78,15 +85,23 @@ function show(id) {
             navMpClicked = false;
             navRecomClicked = false;
             navFriendsClicked = false;
-        }  
+        }else if (visibleId === 'friends') {
+            navFriendsClicked = true;
+            navMpClicked = false;
+            navMyGamesClicked = false;
+            navRecomClicked = false;
+        }
     }
     hide();
     if(visibleId === 'mostPlayed'){
         hideMainContent();
         showMostPlayedGames();
-    } else if (visibleId === 'myGames') {
+    }else if (visibleId === 'myGames') {
         hideMainContent();
         showMyGames();
+    }else if (visibleId === 'friends') {
+        hideMainContent();
+        showFriends();
     }
 }
 
@@ -188,6 +203,7 @@ const showMostPlayedGames = async () => {
     for (let i = 0; i < 50; i++) {
         if(gameClicked === true) return;
         if(navMyGamesClicked === true) return;
+        if(navFriendsClicked === true) return;
         let platform = 0;
         for (const j in playTimeData[i].platforms) {
             if (playTimeData[i].platforms[j] === true)
@@ -199,6 +215,7 @@ const showMostPlayedGames = async () => {
         let app = playTimeData[i].appID;
         let current = await currentPlayersOnline(app);
         if(navMyGamesClicked === true) return;
+        if(navFriendsClicked === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
     }
 }
@@ -209,6 +226,7 @@ const showMyGames = async () => {
     for (const i in totalPlaytime) {
         if(gameClicked === true) return;
         if(navMpClicked === true) return;
+        if(navFriendsClicked === true) return;
         let platform = 0;
         for (const j in totalPlaytime[i].platforms) {
             if (totalPlaytime[i].platforms[j] === true)
@@ -220,6 +238,7 @@ const showMyGames = async () => {
         let app = totalPlaytime[i].appID;
         let current = await currentPlayersOnline(app);
         if(navMpClicked === true) return;
+        if(navFriendsClicked === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
     }
 }
@@ -230,10 +249,17 @@ function hideMainContent() {
         while (mpContainer.firstChild) {
             mpContainer.removeChild(mpContainer.lastChild);
           }
-    } else if(visibleId === 'myGames'){
+    }else if(visibleId === 'myGames') {
         while (myGamesContainer.firstChild) {
             myGamesContainer.removeChild(myGamesContainer.lastChild);
           }
+    }else if(visibleId === 'friends') {
+        while (friendsOnline.firstChild) {
+            friendsOnline.removeChild(friendsOnline.lastChild);
+        }
+        while (friendsOffline.firstChild) {
+            friendsOffline.removeChild(friendsOffline.lastChild);
+        }
     }
 }
 
@@ -445,7 +471,7 @@ const showGameDetails = async () => {
     gameChart.setAttribute('id', 'myChart');
 
     const statisticalDisp = document.createElement('div');
-    const statisticalDispText = document.createTextNode('Statistical Dispersion');
+    const statisticalDispText = document.createTextNode('Measures of dispersion (hours)');
     statisticalDisp.appendChild(statisticalDispText);
     statisticalDisp.classList.add('gameStatsTitle')
     const statDispCont = document.createElement('div');
@@ -570,4 +596,82 @@ function showSlides(n) {
     }
     slides[slideIndex - 1].style.display = 'block';
     dots[slideIndex - 1].className += ' current';
+}
+
+// Function to show friends
+const appendFriends = async (name, img, state) => {
+    let friendStatusText;
+    const friendCont = document.createElement('a');
+    friendCont.classList.add('friendCont');
+    friendCont.href = '#';
+
+    const friendImage = document.createElement('img');
+    friendImage.src = img
+    friendImage.classList.add('friendImage');
+    friendCont.appendChild(friendImage);
+
+    const friendInfoCont = document.createElement('div');
+    friendInfoCont.classList.add('friendInfoCont');
+    friendCont.appendChild(friendInfoCont);
+
+    const friendName = document.createElement('div');
+    const friendNameText = document.createTextNode(name);
+    friendName.appendChild(friendNameText);
+    if (state === 0) friendName.classList.add('friendNameOffline');
+    else if (state === 1) friendName.classList.add('friendName');
+    else friendName.classList.add('friendNameOther');
+    friendInfoCont.appendChild(friendName);
+
+    const friendStatus = document.createElement('div');
+    if (state === 0) friendStatusText = document.createTextNode('Offline');
+    else if (state === 1) friendStatusText = document.createTextNode('Online');
+    else if (state === 2) friendStatusText = document.createTextNode('Busy');
+    else if (state === 3) friendStatusText = document.createTextNode('Away');
+    else if (state === 4) friendStatusText = document.createTextNode('Snooze');
+    else if (state === 5) friendStatusText = document.createTextNode('Looking to trade');
+    else if (state === 6) friendStatusText = document.createTextNode('Looking to play');
+    friendStatus.appendChild(friendStatusText);
+    if (state === 0) friendStatus.classList.add('friendStatusOffline');
+    else if (state === 1) friendStatus.classList.add('friendStatus');
+    else friendStatus.classList.add('friendStatusOther');
+    friendInfoCont.appendChild(friendStatus);
+
+    if (state === 0) {
+        friendsOffline.appendChild(friendCont);
+    } else {
+        friendsOnline.appendChild(friendCont);
+    }
+}
+
+
+let friendsList = []
+const fetchFriends = async () => {
+    for(const i in friendsData){
+        let friendID = friendsData[i];
+        let friend = await steam.getUserSummary(friendID.steamID);
+        friendsList.push(friend);
+    }
+    friendsList = mergeSort(friendsList, 'personaState');
+}
+fetchFriends();
+
+const showFriends = async () => {
+    const onlineText = document.createElement('div');
+    const onlineTextText = document.createTextNode('Online Friends');
+    onlineText.appendChild(onlineTextText);
+    onlineText.classList.add('textOnline');
+    const offlineText = document.createElement('div');
+    const offlineTextText = document.createTextNode('Offline Friends');
+    offlineText.appendChild(offlineTextText);
+    offlineText.classList.add('textOffline');
+    friendsOnline.appendChild(onlineText);
+    friendsOffline.appendChild(offlineText);
+
+    for(const i in friendsList){
+        let friend = friendsList[i];
+        let name = friend.nickname;
+        let avatar = friend.avatar.large;
+        let state = friend.personaState;
+        appendFriends(name, avatar, state)
+    }
 }
