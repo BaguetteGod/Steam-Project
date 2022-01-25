@@ -363,6 +363,7 @@ footer {
     top: 50px;
     left: calc(50% - 480px);
     position: absolute;
+    padding-bottom: 50px;
 }
 
 .gameInfoBgImg {
@@ -383,9 +384,9 @@ footer {
     right: 0;
     position: absolute;
     background: rgb(22, 32, 45);
-    background: -moz-radial-gradient(circle, rgba(22, 32, 45, 0) 0%, rgba(22, 32, 45, 0.8239670868347339) 0%, rgba(22, 32, 45, 0) 100%);
-    background: -webkit-radial-gradient(circle, rgba(22, 32, 45, 0) 0%, rgba(22, 32, 45, 0.8239670868347339) 0%, rgba(22, 32, 45, 0) 100%);
-    background: radial-gradient(circle, rgba(22, 32, 45, 0) 0%, rgba(22, 32, 45, 0.8239670868347339) 0%, rgba(22, 32, 45, 0) 100%);
+    background: -moz-radial-gradient(circle farthest-side at bottom center, rgba(22, 32, 45, 1) 10%, rgba(22, 32, 45, 0.8239670868347339) 50%, rgba(22, 32, 45, 0) 100%);
+    background: -webkit-radial-gradient(circle farthest-side at bottom center, rgba(22, 32, 45, 1) 10%, rgba(22, 32, 45, 0.8239670868347339) 50%, rgba(22, 32, 45, 0) 100%);
+    background: radial-gradient(circle farthest-side at bottom center, rgba(22, 32, 45, 1) 10%, rgba(22, 32, 45, 0.8239670868347339) 50%, rgba(22, 32, 45, 0) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#16202d",endColorstr="#16202d",GradientType=1);
 }
 
@@ -401,6 +402,7 @@ footer {
     flex-direction: row;
     background-color: rgba(22, 32, 45, 0.6);
     height: 475px;
+    border-radius: 5px;
 }
 
 .gameInfoLeft {
@@ -452,16 +454,13 @@ footer {
 
 #myChart {
     width: 100%;
-    margin-top: 50px;
 }
 
 #histogram {
     width: 100%;
-    margin-top: 50px;
 }
 
 #donut {
-    margin-top: 50px;
     width: 50%;
 }
 
@@ -547,4 +546,156 @@ footer {
     background-color: #717171;
 }
 
-/* MY GAMES STYLING */
+.gameStatsTitle {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    width: 100%;
+    font-size: 1.3rem;
+}
+
+.gameStatsCont {
+    background-color: #16202d;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 30px;
+    border-radius: 5px;
+}
+
+.gameStatsContTwo {
+    background-color: #16202d;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 30px;
+    border-radius: 5px;
+    justify-content: space-between;
+}
+
+.innerGameStats {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.innerGameStatsTwo {
+    display: flex;
+    flex-direction: column;
+}
+
+.gameStatsInnerTextTitle {
+    width: 100%;
+    font-size: 1rem;
+    color: #c7d5e0;
+    margin-bottom: 40px;
+}
+
+.gameStatsInnerTextTitleTwo {
+    width: 100%;
+    font-size: 1rem;
+    color: #c7d5e0;
+}
+
+.gameStatsInnerTextStats {
+    width: 100%;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* CSS FOR FRIENDS TAB */
+#friendsOnline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    color: white;
+    font-size: 1.3rem;
+    width: 100%;
+}
+
+#friendsOffline {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    color: white;
+    font-size: 1.3rem;
+    width: 100%;
+}
+
+.textOnline,
+.textOffline {
+    width: 100%;
+    font-size: 1.5rem;
+    color: #c7d5e0;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.friendCont {
+    width: 30%;
+    background-color: #16202d;
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.friendCont:hover {
+    background-color: #101822;
+}
+
+.friendImage {
+    width: 100px;
+    object-fit: cover;
+}
+
+.friendInfoCont {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.friendName {
+    width: 100%;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #51c1ea;
+}
+
+.friendStatus {
+    width: 100%;
+    font-size: 1rem;
+    color: #51c1ea;
+    padding-top: 10px;
+}
+
+.friendNameOffline {
+    width: 100%;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #556772;
+}
+
+.friendStatusOffline {
+    width: 100%;
+    font-size: 1rem;
+    color: #556772;
+    padding-top: 10px;
+}
+
+.friendNameOther {
+    width: 100%;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #51c1ea;
+    opacity: 0.7;
+}
+
+.friendStatusOther {
+    width: 100%;
+    font-size: 1rem;
+    color: #51c1ea;
+    padding-top: 10px;
+    opacity: 0.7;
+}
