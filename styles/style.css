@@ -699,3 +699,79 @@ footer {
     padding-top: 10px;
     opacity: 0.7;
 }
+
+/* FRIEND DETAILS STYLING */
+
+.friendDetailsContainer {
+    width: 960px;
+    min-width: 960px;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box; /* Firefox, other Gecko */
+    box-sizing: border-box; /* Opera/IE 8+ */
+    top: 0;
+    left: calc(50% - 480px);
+    position: absolute;
+    padding-bottom: 50px;
+    background-color: #16202d;
+}
+
+.friendDetailsInfoCont {
+    width: 100%;
+    padding: 30px;
+    padding-top: 50px;
+    display: flex;
+    flex-direction: row;
+}
+
+.friendDetailsAvatar {
+    width: 184px;
+    object-fit: cover;
+}
+
+.friendDetailsInfoRight {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-top: 5px;
+}
+
+.friendDetailsName {
+    width: 100%;
+    font-size: 1.5rem;
+    color: #ffffff;
+    padding-top: 5px;
+    font-weight: 700;
+}
+
+.friendDetailsCountry {
+    width: 100%;
+    font-size: 1rem;
+    color: #ffffff;
+    padding-top: 10px;
+}
+
+.friendDetailsStatusOnline {
+    width: 100%;
+    font-size: 1.2rem;
+    color: #51c1ea;
+    margin-top: 100px;
+    font-weight: 300;
+}
+
+.friendDetailsStatusOffline {
+    width: 100%;
+    font-size: 1.2rem;
+    color: #556772;
+    margin-top: 100px; 
+    font-weight: 300;  
+}
+
+.recentActivityCont {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #171a21;
+    opacity: 0.8;
+}

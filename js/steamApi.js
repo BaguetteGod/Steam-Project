@@ -254,6 +254,5 @@ const getGameInfoById = async (id) => {
     }).on('error', (error) => {
         console.error(error.message);
     });
-    console.log(infoArray);
     return infoArray;
 }

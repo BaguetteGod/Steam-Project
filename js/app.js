@@ -1,4 +1,4 @@
-const steamapi = require("steamapi");
+const steamapi = require('steamapi');
 
 // Variables
 const navContainer = document.getElementById('navContainer');
@@ -10,21 +10,27 @@ const gameContainers = mpContainer.getElementsByClassName('gameContainer');
 const friendsContainer = document.getElementById('friendsContainer');
 const friendsOnline = document.getElementById('friendsOnline');
 const friendsOffline = document.getElementById('friendsOffline');
+const regionNamesInEnglish = new Intl.DisplayNames(['en'], { type: 'region' })
 
 let divs = ['mostPlayed', 'myGames', 'recommended', 'friends'];
 let visibleId = 'mostPlayed';
-let priceText, 
-playtimeText, 
-clickedGameData, 
-thisGamePlayTimes, 
-mean, 
-standardDev,
-variance,
-median,
-filteredPlaytimes,
-gameInfo;
+let priceText,
+    playtimeText,
+    clickedGameData,
+    profileNames,
+    clickedProfileData,
+    thisGamePlayTimes,
+    mean,
+    standardDev,
+    variance,
+    median,
+    filteredPlaytimes,
+    userBadges,
+    userLevel,
+    userRecentGames,
+    gameInfo;
 let histogramData = [];
-let gameClicked = false;
+let contentClicked = false;
 let navMpClicked = false;
 let navMyGamesClicked = false;
 let navRecomClicked = false;
@@ -41,7 +47,7 @@ let friendsData = JSON.parse(request.responseText);
 
 // JSON sorted data variables
 const names = mergeSort(playTimeData, 'name');
-const totalPlaytime = data.reverse()
+const totalPlaytime = data.reverse();
 
 // Give the navbar highlight effects + show corresponding div
 for (let i = 0; i < navElements.length; i++) {
@@ -50,42 +56,42 @@ for (let i = 0; i < navElements.length; i++) {
         current[0].className = current[0].className.replace(' active', '');
         this.className += ' active';
         show(divs[i]);
-    })
+    });
 }
 
 // Event listener for the back arrow
 backArrow.addEventListener('click', function () {
-    if(gameClicked === true) {
-        gameClicked = false
-        if(visibleId === 'mostPlayed') {
+    if (contentClicked === true) {
+        contentClicked = false;
+        if (visibleId === 'mostPlayed') {
             hideMainContent();
             showMostPlayedGames();
-        }else if(visibleId === 'myGames') {
+        } else if (visibleId === 'myGames') {
             hideMainContent();
             showMyGames();
         }
     } else {
         return;
     }
-})
+});
 
 // Function to show div within maincontent
 function show(id) {
-    gameClicked = false;
+    contentClicked = false;
     hideMainContent();
     if (visibleId !== id) {
         visibleId = id;
-        if(visibleId === 'mostPlayed') {
+        if (visibleId === 'mostPlayed') {
             navMpClicked = true;
             navMyGamesClicked = false;
             navRecomClicked = false;
             navFriendsClicked = false;
-        }else if (visibleId === 'myGames') {
-            navMyGamesClicked = true
+        } else if (visibleId === 'myGames') {
+            navMyGamesClicked = true;
             navMpClicked = false;
             navRecomClicked = false;
             navFriendsClicked = false;
-        }else if (visibleId === 'friends') {
+        } else if (visibleId === 'friends') {
             navFriendsClicked = true;
             navMpClicked = false;
             navMyGamesClicked = false;
@@ -93,13 +99,13 @@ function show(id) {
         }
     }
     hide();
-    if(visibleId === 'mostPlayed'){
+    if (visibleId === 'mostPlayed') {
         hideMainContent();
         showMostPlayedGames();
-    }else if (visibleId === 'myGames') {
+    } else if (visibleId === 'myGames') {
         hideMainContent();
         showMyGames();
-    }else if (visibleId === 'friends') {
+    } else if (visibleId === 'friends') {
         hideMainContent();
         showFriends();
     }
@@ -121,20 +127,20 @@ function hide() {
 
 // Functions to dynamically add data from JSON file to the maincontent section in most played
 function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
-    if(gameClicked === true) return;
+    if (contentClicked === true) return;
     const newContainer = document.createElement('a');
     newContainer.classList.add('gameContainer');
-    newContainer.href = '#'
+    newContainer.href = '#';
 
     const windowsLogo = document.createElement('img');
-    windowsLogo.src = './assets/windows-10-white.png'
+    windowsLogo.src = './assets/windows-10-white.png';
     const macLogo = document.createElement('img');
-    macLogo.src = './assets/apple-logo-white.png'
+    macLogo.src = './assets/apple-logo-white.png';
     const linuxLogo = document.createElement('img');
-    linuxLogo.src = './assets/linux-white.png'
+    linuxLogo.src = './assets/linux-white.png';
 
     const textContainer = document.createElement('div');
-    textContainer.classList.add('textContainer')
+    textContainer.classList.add('textContainer');
 
     const newImage = document.createElement('img');
     newImage.classList.add('mpImage');
@@ -157,15 +163,14 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         platformLogos.appendChild(windowsLogo);
         platformLogos.appendChild(macLogo);
         platformLogos.appendChild(linuxLogo);
-
     }
     platformLogos.classList.add('mpPlatforms');
     textContainer.appendChild(platformLogos);
 
     const newPlaytime = document.createElement('div');
-    if(visibleId === 'mostPlayed') {
+    if (visibleId === 'mostPlayed') {
         playtimeText = document.createTextNode(`Community playtime: ${Math.floor(playtime / 60).toLocaleString()} hours`);
-    }else{
+    } else {
         playtimeText = document.createTextNode(`Total playtime: ${Math.floor(playtime / 60).toLocaleString()} hours`);
     }
     newPlaytime.appendChild(playtimeText);
@@ -187,73 +192,70 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         range = getRange(filteredPlaytimes);
         gameInfo = await getGameInfoById(clickedGameData.appID);
         hideMainContent();
-        setTimeout(showGameDetails, 600)
-        gameClicked = true;
+        setTimeout(showGameDetails, 600);
+        contentClicked = true;
     });
-    if(visibleId === 'mostPlayed') {
+    if (visibleId === 'mostPlayed') {
         mpContainer.appendChild(newContainer);
-    } else if(visibleId === 'myGames') {
-        myGamesContainer.appendChild(newContainer)
+    } else if (visibleId === 'myGames') {
+        myGamesContainer.appendChild(newContainer);
     }
-    
 }
 
 // Function to dynamically add data to most played games maincontent
 const showMostPlayedGames = async () => {
     for (let i = 0; i < 50; i++) {
-        if(gameClicked === true) return;
-        if(navMyGamesClicked === true) return;
-        if(navFriendsClicked === true) return;
+        if (contentClicked === true) return;
+        if (navMyGamesClicked === true) return;
+        if (navFriendsClicked === true) return;
         let platform = 0;
         for (const j in playTimeData[i].platforms) {
-            if (playTimeData[i].platforms[j] === true)
-            platform ++;
+            if (playTimeData[i].platforms[j] === true) platform++;
         }
         let name = playTimeData[i].name;
         let timePlayed = playTimeData[i].totalPlayTime;
         let imgSource = playTimeData[i].headerImage;
         let app = playTimeData[i].appID;
         let current = await currentPlayersOnline(app);
-        if(navMyGamesClicked === true) return;
-        if(navFriendsClicked === true) return;
+        if (navMyGamesClicked === true) return;
+        if (navFriendsClicked === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
     }
-}
+};
 showMostPlayedGames();
 
 // Function to dynamically add data to my games maincontent
 const showMyGames = async () => {
     for (const i in totalPlaytime) {
-        if(gameClicked === true) return;
-        if(navMpClicked === true) return;
-        if(navFriendsClicked === true) return;
+        if (contentClicked === true) return;
+        if (navMpClicked === true) return;
+        if (navFriendsClicked === true) return;
         let platform = 0;
         for (const j in totalPlaytime[i].platforms) {
-            if (totalPlaytime[i].platforms[j] === true)
-            platform ++;
+            if (totalPlaytime[i].platforms[j] === true) platform++;
         }
         let name = totalPlaytime[i].name;
         let timePlayed = totalPlaytime[i].playTime;
         let imgSource = totalPlaytime[i].headerImage;
         let app = totalPlaytime[i].appID;
         let current = await currentPlayersOnline(app);
-        if(navMpClicked === true) return;
-        if(navFriendsClicked === true) return;
+        if (navMpClicked === true) return;
+        if (navFriendsClicked === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
     }
-}
+};
 
 // Function to hide content in main
 function hideMainContent() {
-    if(visibleId === 'mostPlayed') {
+    if (visibleId === 'mostPlayed') {
         while (mpContainer.firstChild) {
             mpContainer.removeChild(mpContainer.lastChild);
-          }
-    }else if(visibleId === 'myGames') {
+        }
+    } else if (visibleId === 'myGames') {
         while (myGamesContainer.firstChild) {
             myGamesContainer.removeChild(myGamesContainer.lastChild);
-          }
-    }else if(visibleId === 'friends') {
+        }
+    } else if (visibleId === 'friends') {
         while (friendsOnline.firstChild) {
             friendsOnline.removeChild(friendsOnline.lastChild);
         }
@@ -272,7 +274,7 @@ const showGameDetails = async () => {
     const gameTitle = document.createElement('div');
     const gameTitleText = document.createTextNode(clickedGameData.name);
     gameTitle.appendChild(gameTitleText);
-    gameTitle.classList.add('gameTitle')
+    gameTitle.classList.add('gameTitle');
     gameDetailsCont.appendChild(gameTitle);
 
     const gameInfoCont = document.createElement('div');
@@ -287,21 +289,21 @@ const showGameDetails = async () => {
     const dotsDiv = document.createElement('div');
     dotsDiv.classList.add('dotCont');
     let dotCount = 0;
-    for(const i in gameInfo[0].screenshots) {
+    for (const i in gameInfo[0].screenshots) {
         let source = gameInfo[0].screenshots[i].path_thumbnail;
         const slideDiv = document.createElement('div');
         slideDiv.classList.add('mySlides');
-        const slideImg = document.createElement('img')
+        const slideImg = document.createElement('img');
         slideImg.src = source;
         slideDiv.appendChild(slideImg);
         gameSlider.appendChild(slideDiv);
         const dot = document.createElement('span');
-        dot.classList.add('dot')
-        dotCount ++;
+        dot.classList.add('dot');
+        dotCount++;
         dot.setAttribute('onclick', `currentSlide(${dotCount})`);
         dotsDiv.appendChild(dot);
     }
-    
+
     const buttonPrev = document.createElement('a');
     const buttonPrevImg = document.createElement('img');
     buttonPrevImg.src = './assets/arrow-left.png';
@@ -310,7 +312,7 @@ const showGameDetails = async () => {
     gameSlider.appendChild(buttonPrev);
     buttonPrev.onclick = function minSlides() {
         showSlides((slideIndex += -1));
-    }
+    };
     const buttonNext = document.createElement('a');
     const buttonNextImg = document.createElement('img');
     buttonNextImg.src = './assets/arrow-right.png';
@@ -319,21 +321,21 @@ const showGameDetails = async () => {
     gameSlider.appendChild(buttonNext);
     buttonNext.onclick = function plusSlides() {
         showSlides((slideIndex += 1));
-    }
-    
+    };
+
     gameInfoLeft.appendChild(gameSlider);
     gameInfoLeft.appendChild(dotsDiv);
 
     const gameInfoImg = document.createElement('img');
     gameInfoImg.classList.add('gameInfoImg');
     gameInfoImg.src = gameInfo[0].headerImage;
-    const gameInfoDesc = document.createElement('div')
+    const gameInfoDesc = document.createElement('div');
     const gameInfoDescText = document.createTextNode(gameInfo[0].description);
     gameInfoDesc.appendChild(gameInfoDescText);
     gameInfoDesc.classList.add('gameInfoDesc');
     const gameInfoRightCont = document.createElement('div');
     gameInfoRightCont.classList.add('gameInfoRightCont');
-    const gameInfoRightContLeft = document.createElement('div')
+    const gameInfoRightContLeft = document.createElement('div');
     gameInfoRightContLeft.classList.add('gameInfoRightContLeft');
     const gameInfoRightContRight = document.createElement('div');
     gameInfoRightContRight.classList.add('gameInfoRightContRight');
@@ -362,13 +364,13 @@ const showGameDetails = async () => {
     gameInfoRightContLeft.appendChild(gameInfoDevsLeft);
 
     const gameInfoDevsRight = document.createElement('div');
-    for(const dev in gameInfo[0].developers) {
+    for (const dev in gameInfo[0].developers) {
         let devsLength = gameInfo[0].developers.length;
-        let devText; 
-        if(dev == (devsLength - 1)) {
+        let devText;
+        if (dev == devsLength - 1) {
             devText = document.createTextNode(` ${gameInfo[0].developers[dev]}`);
         } else {
-           devText = document.createTextNode(` ${gameInfo[0].developers[dev]},`);
+            devText = document.createTextNode(` ${gameInfo[0].developers[dev]},`);
         }
         gameInfoDevsRight.appendChild(devText);
     }
@@ -380,10 +382,10 @@ const showGameDetails = async () => {
     gameInfoRightContLeft.appendChild(gameInfoPubsLeft);
 
     const gameInfoPubsRight = document.createElement('div');
-    for(const pub in gameInfo[0].publishers) {
+    for (const pub in gameInfo[0].publishers) {
         let pubsLength = gameInfo[0].publishers.length;
-        let pubText; 
-        if(pub == (pubsLength - 1)) {
+        let pubText;
+        if (pub == pubsLength - 1) {
             pubText = document.createTextNode(` ${gameInfo[0].publishers[pub]}`);
         } else {
             pubText = document.createTextNode(` ${gameInfo[0].publishers[pub]},`);
@@ -402,7 +404,7 @@ const showGameDetails = async () => {
     gameInfoCont.appendChild(gameInfoLeft);
     gameInfoCont.appendChild(gameInfoRight);
 
-    const gameStatsTitle = document.createElement('div')
+    const gameStatsTitle = document.createElement('div');
     const gameStatsTitleText = document.createTextNode('Game stats');
     gameStatsTitle.appendChild(gameStatsTitleText);
     gameStatsTitle.classList.add('gameStatsTitle');
@@ -420,12 +422,12 @@ const showGameDetails = async () => {
     gameStatsPlayTimeCount.classList.add('gameStatsInnerTextStats');
     innerGameStatsLeft.appendChild(gameStatsPlayTimeCount);
     const gameStatsPlayTime = document.createElement('div');
-    const gameStatsPlayTimeText = document.createTextNode('hours of community playtime')
+    const gameStatsPlayTimeText = document.createTextNode('hours of community playtime');
     gameStatsPlayTime.appendChild(gameStatsPlayTimeText);
     gameStatsPlayTime.classList.add('gameStatsInnerTextTitle');
     innerGameStatsLeft.appendChild(gameStatsPlayTime);
 
-    playersNow = await currentPlayersOnline(gameInfo[0].appID)
+    playersNow = await currentPlayersOnline(gameInfo[0].appID);
     const gameStatsPlayersNow = document.createElement('div');
     const gameStatsPlayersNowText = document.createTextNode(`${playersNow.toLocaleString()}`);
     gameStatsPlayersNow.appendChild(gameStatsPlayersNowText);
@@ -449,7 +451,7 @@ const showGameDetails = async () => {
     innerGameStatsLeft.appendChild(gameStatsOwnersTitle);
 
     const gameStatsReviewsPercent = document.createElement('div');
-    const gameStatsReviewsPercentText = document.createTextNode(`${(gameInfo[0].totalPositive / gameInfo[0].totalReviews * 100).toFixed(2)}%`)
+    const gameStatsReviewsPercentText = document.createTextNode(`${((gameInfo[0].totalPositive / gameInfo[0].totalReviews) * 100).toFixed(2)}%`);
     gameStatsReviewsPercent.appendChild(gameStatsReviewsPercentText);
     gameStatsReviewsPercent.classList.add('gameStatsInnerTextStats');
     innerGameStatsLeft.appendChild(gameStatsReviewsPercent);
@@ -466,14 +468,14 @@ const showGameDetails = async () => {
     const gameChartTitle = document.createElement('div');
     const gameChartTitleText = document.createTextNode('Playtime distribution');
     gameChartTitle.appendChild(gameChartTitleText);
-    gameChartTitle.classList.add('gameStatsTitle')
+    gameChartTitle.classList.add('gameStatsTitle');
     const gameChart = document.createElement('canvas');
     gameChart.setAttribute('id', 'myChart');
 
     const statisticalDisp = document.createElement('div');
     const statisticalDispText = document.createTextNode('Measures of dispersion (hours)');
     statisticalDisp.appendChild(statisticalDispText);
-    statisticalDisp.classList.add('gameStatsTitle')
+    statisticalDisp.classList.add('gameStatsTitle');
     const statDispCont = document.createElement('div');
     statDispCont.classList.add('gameStatsContTwo');
     const statDispInner = document.createElement('div');
@@ -497,7 +499,7 @@ const showGameDetails = async () => {
     const statRangeTitle = document.createElement('div');
     const statRangeTitleText = document.createTextNode('playtime range');
     statRangeTitle.appendChild(statRangeTitleText);
-    statRangeTitle.classList.add('gameStatsInnerTextTitleTwo')
+    statRangeTitle.classList.add('gameStatsInnerTextTitleTwo');
     statDispInner.appendChild(statRangeTitle);
 
     const statDeviation = document.createElement('div');
@@ -538,7 +540,7 @@ const showGameDetails = async () => {
     histogramTitle.appendChild(histogramTitleText);
     histogramTitle.classList.add('gameStatsTitle');
     const histogram = document.createElement('canvas');
-    histogram.setAttribute('id', 'histogram')
+    histogram.setAttribute('id', 'histogram');
     gameDetailsCont.appendChild(gameInfoCont);
     gameDetailsCont.appendChild(gameStatsTitle);
     gameDetailsCont.appendChild(gameStats);
@@ -551,31 +553,37 @@ const showGameDetails = async () => {
 
     const backgroundImg = document.createElement('img');
     backgroundImg.src = gameInfo[0].background;
-    backgroundImg.classList.add('gameInfoBgImg')
+    backgroundImg.classList.add('gameInfoBgImg');
 
     const backgroundGradient = document.createElement('div');
     backgroundGradient.classList.add('gameInfoGradient');
 
-    if(visibleId === 'mostPlayed') {
+    if (visibleId === 'mostPlayed') {
         mpContainer.appendChild(backgroundGradient);
         mpContainer.appendChild(backgroundImg);
         mpContainer.appendChild(gameDetailsCont);
-    } else if(visibleId === 'myGames') {
+    } else if (visibleId === 'myGames') {
         myGamesContainer.appendChild(backgroundGradient);
         myGamesContainer.appendChild(backgroundImg);
         myGamesContainer.appendChild(gameDetailsCont);
     }
     showSlides(slideIndex);
-    setTimeout(function(){createDonutChart(gameInfo[0].totalPositive, gameInfo[0].totalNegative)}, 500)
-    setTimeout(function(){createGameChart(filteredPlaytimes)}, 500)
-    setTimeout(function(){createHistogram(histogramData)}, 500)
-}
+    setTimeout(function () {
+        createDonutChart(gameInfo[0].totalPositive, gameInfo[0].totalNegative);
+    }, 500);
+    setTimeout(function () {
+        createGameChart(filteredPlaytimes);
+    }, 500);
+    setTimeout(function () {
+        createHistogram(histogramData);
+    }, 500);
+};
 
 // Slider for game details functionality
 let slideIndex = 1;
 
 function currentSlide(n) {
-    showSlides(slideIndex = n);
+    showSlides((slideIndex = n));
 }
 
 function showSlides(n) {
@@ -599,14 +607,14 @@ function showSlides(n) {
 }
 
 // Function to show friends
-const appendFriends = async (name, img, state) => {
+const appendFriends = async (name, img, state, friendID) => {
     let friendStatusText;
     const friendCont = document.createElement('a');
     friendCont.classList.add('friendCont');
     friendCont.href = '#';
 
     const friendImage = document.createElement('img');
-    friendImage.src = img
+    friendImage.src = img;
     friendImage.classList.add('friendImage');
     friendCont.appendChild(friendImage);
 
@@ -636,23 +644,36 @@ const appendFriends = async (name, img, state) => {
     else friendStatus.classList.add('friendStatusOther');
     friendInfoCont.appendChild(friendStatus);
 
+    friendCont.setAttribute('data-steamID', friendID);
+    friendCont.addEventListener('click', async function () {
+        let clickedProfile = this.getAttribute('data-steamID');
+        profileNames = mergeSort(friendsList, 'steamID');
+        clickedProfileData = recBinarySearch(profileNames, clickedProfile, 'steamID');
+        userBadges = await steam.getUserBadges(clickedProfile);
+        userRecentGames = await steam.getUserRecentGames(clickedProfile);
+        console.log(userBadges);
+        console.log(userRecentGames);
+        console.log(clickedProfileData);
+        hideMainContent();
+        showFriendDetails();
+    });
+
     if (state === 0) {
         friendsOffline.appendChild(friendCont);
     } else {
         friendsOnline.appendChild(friendCont);
     }
-}
+};
 
-
-let friendsList = []
+let friendsList = [];
 const fetchFriends = async () => {
-    for(const i in friendsData){
+    for (const i in friendsData) {
         let friendID = friendsData[i];
         let friend = await steam.getUserSummary(friendID.steamID);
         friendsList.push(friend);
     }
     friendsList = mergeSort(friendsList, 'personaState');
-}
+};
 fetchFriends();
 
 const showFriends = async () => {
@@ -667,11 +688,55 @@ const showFriends = async () => {
     friendsOnline.appendChild(onlineText);
     friendsOffline.appendChild(offlineText);
 
-    for(const i in friendsList){
+    for (const i in friendsList) {
         let friend = friendsList[i];
         let name = friend.nickname;
         let avatar = friend.avatar.large;
         let state = friend.personaState;
-        appendFriends(name, avatar, state)
+        let friendID = friend.steamID;
+        appendFriends(name, avatar, state, friendID);
     }
+};
+
+const showFriendDetails = async () => {
+    let friendOnlineText;
+    let state = clickedProfileData.personaState;
+    const friendDetailsCont = document.createElement('div');
+    friendDetailsCont.classList.add('friendDetailsContainer');
+    friendsOnline.appendChild(friendDetailsCont);
+
+    const friendDetailsInfo = document.createElement('div');
+    friendDetailsInfo.classList.add('friendDetailsInfoCont')
+    friendDetailsCont.appendChild(friendDetailsInfo);
+    const friendDetailsInfoRight = document.createElement('div');
+    friendDetailsInfoRight.classList.add('friendDetailsInfoRight');
+
+    const friendAvatar = document.createElement('img');
+    friendAvatar.classList.add('friendDetailsAvatar');
+    friendAvatar.src = clickedProfileData.avatar.large;
+    friendDetailsInfo.appendChild(friendAvatar)
+
+    const friendName = document.createElement('div');
+    const friendNameText = document.createTextNode(clickedProfileData.nickname);
+    friendName.appendChild(friendNameText);
+    friendName.classList.add('friendDetailsName');
+    friendDetailsInfoRight.appendChild(friendName);
+
+    if(clickedProfileData.countryCode !== undefined) {
+        const friendCountry = document.createElement('div');
+        const friendCountryText = document.createTextNode(regionNamesInEnglish.of(clickedProfileData.countryCode));
+        friendCountry.appendChild(friendCountryText);
+        friendCountry.classList.add('friendDetailsCountry');
+        friendDetailsInfoRight.appendChild(friendCountry);
+    }
+    
+    const friendOnline = document.createElement('div');
+    if (state === 0) friendOnlineText = document.createTextNode('Currently Offline');
+    else if (state === 1) friendOnlineText = document.createTextNode('Currently Online');
+    friendOnline.appendChild(friendOnlineText);
+    if (state === 0) friendOnline.classList.add('friendDetailsStatusOffline');
+    else friendOnline.classList.add('friendDetailsStatusOnline');
+    friendDetailsInfoRight.appendChild(friendOnline);
+
+    friendDetailsInfo.appendChild(friendDetailsInfoRight);
 }
