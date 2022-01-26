@@ -141,10 +141,10 @@ html {
 
 ::-webkit-scrollbar {
     width: 12px;
-  }
-  ::-webkit-scrollbar-track {
+}
+::-webkit-scrollbar-track {
     background: var(--scrollbarBG); 
-  }
+}
 ::-webkit-scrollbar-track {
     background: var(--scrollbarBG);
 }
@@ -715,12 +715,13 @@ footer {
     left: calc(50% - 480px);
     position: absolute;
     padding-bottom: 50px;
+    padding-left: 30px;
+    padding-right: 30px;
     background-color: #16202d;
 }
 
 .friendDetailsInfoCont {
     width: 100%;
-    padding: 30px;
     padding-top: 50px;
     display: flex;
     flex-direction: row;
@@ -766,7 +767,6 @@ footer {
     font-size: 1.2rem;
     color: #556772;
     margin-top: 100px; 
-    font-weight: 300;  
 }
 
 .recentActivityCont {
@@ -774,4 +774,63 @@ footer {
     border-radius: 5px;
     background-color: #171a21;
     opacity: 0.8;
+    padding: 10px;
+    margin-top: 50px;
+    font-weight: 400;
+    display: flex;
+    justify-content: space-between;
+}
+
+.recentActivityContGames {
+    width: 100%;
+    border-radius: 5px;
+    background-color: #171a21;
+    opacity: 0.8;
+    padding: 10px;
+    margin-top: 10px;
+    font-weight: 400;
+    display: flex;
+    flex-direction: row;
+}
+
+.recentActivityContGamesTitle {
+    width: 100%;
+    padding: 10px;
+    font-weight: 400;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.recentActivityContGamesTitle:nth-child(3) {
+    width: 100%;
+    padding: 10px;
+    font-weight: 400;
+    font-size: 0.9rem;
+    text-align: right;
+    color: #556772;
+    padding-top: 50px;
+}
+
+.noActivity {
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.userOwnedGamesCont{
+    width: 100%;
+    height: 730px;
+    overflow-y: scroll;
+}
+
+.userOwnedGamesCont::-webkit-scrollbar-track {
+    background: #16202d;
+}
+ .userOwnedGamesCont::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG);
+    border-radius: 6px;
+    border: 3px solid #16202d;
 }
