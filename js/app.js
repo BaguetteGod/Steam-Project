@@ -686,7 +686,6 @@ const appendFriends = async (name, img, state, friendID) => {
         clickedProfileData = recBinarySearch(profileNames, clickedProfile, 'steamID');
         userBadges = await steam.getUserBadges(clickedProfile);
         userRecentGames = await steam.getUserRecentGames(clickedProfile);
-        console.log(userBadges);
         hideMainContent();
         showFriendDetails();
         contentClicked = true;
