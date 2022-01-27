@@ -307,7 +307,9 @@ const showGameDetails = async () => {
     const dotsDiv = document.createElement('div');
     dotsDiv.classList.add('dotCont');
     let dotCount = 0;
+    let screenshotsCount = 0;
     for (const i in gameInfo[0].screenshots) {
+        if(screenshotsCount === 20) break;
         let source = gameInfo[0].screenshots[i].path_thumbnail;
         const slideDiv = document.createElement('div');
         slideDiv.classList.add('mySlides');
@@ -318,6 +320,7 @@ const showGameDetails = async () => {
         const dot = document.createElement('span');
         dot.classList.add('dot');
         dotCount++;
+        screenshotsCount++;
         dot.setAttribute('onclick', `currentSlide(${dotCount})`);
         dotsDiv.appendChild(dot);
     }
@@ -434,50 +437,59 @@ const showGameDetails = async () => {
     innerGameStatsRight.classList.add('innerGameStats');
     gameStats.appendChild(innerGameStatsLeft);
 
+    const innerGameStatsWrapOne = document.createElement('div');
+    const innerGameStatsWrapTwo= document.createElement('div');
+    const innerGameStatsWrapThree = document.createElement('div');
+    const innerGameStatsWrapFour = document.createElement('div');
+    innerGameStatsLeft.appendChild(innerGameStatsWrapOne)
+    innerGameStatsLeft.appendChild(innerGameStatsWrapTwo)
+    innerGameStatsLeft.appendChild(innerGameStatsWrapThree)
+    innerGameStatsLeft.appendChild(innerGameStatsWrapFour)
+
     const gameStatsPlayTimeCount = document.createElement('div');
     const gameStatsPlayTimeCountText = document.createTextNode(`${Math.floor(clickedGameData.totalPlayTime / 60).toLocaleString()}`);
     gameStatsPlayTimeCount.appendChild(gameStatsPlayTimeCountText);
     gameStatsPlayTimeCount.classList.add('gameStatsInnerTextStats');
-    innerGameStatsLeft.appendChild(gameStatsPlayTimeCount);
+    innerGameStatsWrapOne.appendChild(gameStatsPlayTimeCount);
     const gameStatsPlayTime = document.createElement('div');
     const gameStatsPlayTimeText = document.createTextNode('hours of community playtime');
     gameStatsPlayTime.appendChild(gameStatsPlayTimeText);
     gameStatsPlayTime.classList.add('gameStatsInnerTextTitle');
-    innerGameStatsLeft.appendChild(gameStatsPlayTime);
+    innerGameStatsWrapOne.appendChild(gameStatsPlayTime);
 
     playersNow = await currentPlayersOnline(gameInfo[0].appID);
     const gameStatsPlayersNow = document.createElement('div');
     const gameStatsPlayersNowText = document.createTextNode(`${playersNow.toLocaleString()}`);
     gameStatsPlayersNow.appendChild(gameStatsPlayersNowText);
     gameStatsPlayersNow.classList.add('gameStatsInnerTextStats');
-    innerGameStatsLeft.appendChild(gameStatsPlayersNow);
+    innerGameStatsWrapTwo.appendChild(gameStatsPlayersNow);
     const gameStatsPlayersNowTitle = document.createElement('div');
     const gameStatsPlayersNowTitleText = document.createTextNode('players online right now');
     gameStatsPlayersNowTitle.appendChild(gameStatsPlayersNowTitleText);
     gameStatsPlayersNowTitle.classList.add('gameStatsInnerTextTitle');
-    innerGameStatsLeft.appendChild(gameStatsPlayersNowTitle);
+    innerGameStatsWrapTwo.appendChild(gameStatsPlayersNowTitle);
 
     const gameStatsOwners = document.createElement('div');
     const gameStatsOwnersText = document.createTextNode(`${clickedGameData.owners.toLocaleString()}`);
     gameStatsOwners.appendChild(gameStatsOwnersText);
     gameStatsOwners.classList.add('gameStatsInnerTextStats');
-    innerGameStatsLeft.appendChild(gameStatsOwners);
+    innerGameStatsWrapThree.appendChild(gameStatsOwners);
     const gameStatsOwnersTitle = document.createElement('div');
     const gameStatsOwnersTitleText = document.createTextNode('game owners');
     gameStatsOwnersTitle.appendChild(gameStatsOwnersTitleText);
     gameStatsOwnersTitle.classList.add('gameStatsInnerTextTitle');
-    innerGameStatsLeft.appendChild(gameStatsOwnersTitle);
+    innerGameStatsWrapThree.appendChild(gameStatsOwnersTitle);
 
     const gameStatsReviewsPercent = document.createElement('div');
     const gameStatsReviewsPercentText = document.createTextNode(`${((gameInfo[0].totalPositive / gameInfo[0].totalReviews) * 100).toFixed(2)}%`);
     gameStatsReviewsPercent.appendChild(gameStatsReviewsPercentText);
     gameStatsReviewsPercent.classList.add('gameStatsInnerTextStats');
-    innerGameStatsLeft.appendChild(gameStatsReviewsPercent);
+    innerGameStatsWrapFour.appendChild(gameStatsReviewsPercent);
     const gameStatsReviewsPercentTitle = document.createElement('div');
     const gameStatsReviewsPercentTitleText = document.createTextNode('positive reviews');
     gameStatsReviewsPercentTitle.appendChild(gameStatsReviewsPercentTitleText);
     gameStatsReviewsPercentTitle.classList.add('gameStatsInnerTextTitle');
-    innerGameStatsLeft.appendChild(gameStatsReviewsPercentTitle);
+    innerGameStatsWrapFour.appendChild(gameStatsReviewsPercentTitle);
 
     gameStats.appendChild(innerGameStatsRight);
     const donutChart = document.createElement('canvas');
@@ -674,9 +686,6 @@ const appendFriends = async (name, img, state, friendID) => {
         clickedProfileData = recBinarySearch(profileNames, clickedProfile, 'steamID');
         userBadges = await steam.getUserBadges(clickedProfile);
         userRecentGames = await steam.getUserRecentGames(clickedProfile);
-        console.log(userBadges);
-        console.log(userRecentGames);
-        console.log(clickedProfileData);
         hideMainContent();
         showFriendDetails();
         contentClicked = true;
@@ -737,21 +746,25 @@ const showFriendDetails = async () => {
 
     const friendAvatar = document.createElement('img');
     friendAvatar.classList.add('friendDetailsAvatar');
+    if(state === 0) friendAvatar.classList.add('friendImageOffline');
+    else friendAvatar.classList.add('friendImageOnline');
     friendAvatar.src = clickedProfileData.avatar.large;
     friendDetailsInfo.appendChild(friendAvatar)
 
+    const friendNameCountryWrap = document.createElement('div');
+    friendDetailsInfoRight.appendChild(friendNameCountryWrap);
     const friendName = document.createElement('div');
     const friendNameText = document.createTextNode(clickedProfileData.nickname);
     friendName.appendChild(friendNameText);
     friendName.classList.add('friendDetailsName');
-    friendDetailsInfoRight.appendChild(friendName);
+    friendNameCountryWrap.appendChild(friendName);
 
     if(clickedProfileData.countryCode !== undefined) {
         const friendCountry = document.createElement('div');
         const friendCountryText = document.createTextNode(regionNamesInEnglish.of(clickedProfileData.countryCode));
         friendCountry.appendChild(friendCountryText);
         friendCountry.classList.add('friendDetailsCountry');
-        friendDetailsInfoRight.appendChild(friendCountry);
+        friendNameCountryWrap.appendChild(friendCountry);
     }
     
     const friendOnline = document.createElement('div');
