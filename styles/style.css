@@ -754,6 +754,7 @@ footer {
     padding-left: 20px;
     padding-top: 5px;
     justify-content: space-between;
+    width: 30%;
 }
 
 .friendDetailsName {
@@ -784,6 +785,79 @@ footer {
     font-size: 1.2rem;
     color: #556772;
     padding-bottom: 5px;
+}
+
+.friendLevelCont {
+    width: 50%;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-left: 300px;
+}
+
+.friendDetailsLevelTitle {
+    font-size: 1.5rem;
+    color: #ffffff;
+    padding-top: 10px;
+    text-align: center;
+}
+
+.friendLevelWrap {
+    width: 75px;
+    height: 75px;
+    margin: auto;
+    margin-top: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friendLevelColorOne {
+    border: 3px solid #929292;
+    border-radius: 100px;
+}
+
+.friendLevelColorTwo {
+    border: 3px solid #a21e38;
+    border-radius: 100px;
+}
+
+.friendLevelColorThree {
+    border: 3px solid #be6557;
+    border-radius: 100px;
+}
+
+.friendLevelColorFour {
+    border: 3px solid #d8ac09;
+    border-radius: 100px;
+}
+
+.friendLevelColorFive {
+    border: 3px solid #3a652d;
+    border-radius: 100px;
+}
+
+.friendLevelColorSix {
+    border: 3px solid #568cd9;
+    border-radius: 100px;
+}
+
+.friendLevelColorSeven {
+    border: 3px solid #7b54c5;
+    border-radius: 100px;
+}
+
+.friendLevelColorEight {
+    border: 3px solid #bc56c6;
+    border-radius: 100px;
+}
+
+.friendDetailsLevel {
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-align: center;
 }
 
 .recentActivityCont {

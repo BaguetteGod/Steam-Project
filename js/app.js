@@ -686,6 +686,7 @@ const appendFriends = async (name, img, state, friendID) => {
         clickedProfileData = recBinarySearch(profileNames, clickedProfile, 'steamID');
         userBadges = await steam.getUserBadges(clickedProfile);
         userRecentGames = await steam.getUserRecentGames(clickedProfile);
+        console.log(userBadges);
         hideMainContent();
         showFriendDetails();
         contentClicked = true;
@@ -776,6 +777,34 @@ const showFriendDetails = async () => {
     friendDetailsInfoRight.appendChild(friendOnline);
 
     friendDetailsInfo.appendChild(friendDetailsInfoRight);
+
+    const friendLevelCont = document.createElement('div');
+    friendLevelCont.classList.add('friendLevelCont');
+    friendDetailsInfo.appendChild(friendLevelCont);
+    const friendDetailsLevel = document.createElement('div');
+    const friendDetailsLevelText = document.createTextNode('Level');
+    friendDetailsLevel.appendChild(friendDetailsLevelText);
+    friendDetailsLevel.classList.add('friendDetailsLevelTitle');
+    friendLevelCont.appendChild(friendDetailsLevel);
+
+    const friendActualLevelWrap = document.createElement('div');
+    friendActualLevelWrap.classList.add('friendLevelWrap');
+    if(userBadges.playerLevel >= 1 && userBadges.playerLevel < 10) friendActualLevelWrap.classList.add('friendLevelColorOne');
+    else if(userBadges.playerLevel >= 10 && userBadges.playerLevel < 20) friendActualLevelWrap.classList.add('friendLevelColorTwo');
+    else if(userBadges.playerLevel >= 20 && userBadges.playerLevel < 30) friendActualLevelWrap.classList.add('friendLevelColorThree');
+    else if(userBadges.playerLevel >= 30 && userBadges.playerLevel < 40) friendActualLevelWrap.classList.add('friendLevelColorFour');
+    else if(userBadges.playerLevel >= 40 && userBadges.playerLevel < 50) friendActualLevelWrap.classList.add('friendLevelColorFive');
+    else if(userBadges.playerLevel >= 50 && userBadges.playerLevel < 60) friendActualLevelWrap.classList.add('friendLevelColorSix');
+    else if(userBadges.playerLevel >= 60 && userBadges.playerLevel < 70) friendActualLevelWrap.classList.add('friendLevelColorSeven');
+    else if(userBadges.playerLevel >= 70 && userBadges.playerLevel < 80) friendActualLevelWrap.classList.add('friendLevelColorEight');
+    else friendActualLevelWrap.classList.add('friendLevelColorEight');
+
+    const friendActualLevel = document.createElement('div');
+    const friendActualLevelText = document.createTextNode(userBadges.playerLevel);
+    friendActualLevel.appendChild(friendActualLevelText);
+    friendActualLevel.classList.add('friendDetailsLevel');
+    friendActualLevelWrap.appendChild(friendActualLevel);
+    friendLevelCont.appendChild(friendActualLevelWrap);
 
     const recentGamesTitle = document.createElement('div');
     recentGamesTitle.classList.add('recentActivityCont');
