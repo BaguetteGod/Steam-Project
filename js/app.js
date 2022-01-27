@@ -8,7 +8,8 @@ const gameContainers = mpContainer.getElementsByClassName('gameContainer');
 const friendsContainer = document.getElementById('friendsContainer');
 const friendsOnline = document.getElementById('friendsOnline');
 const friendsOffline = document.getElementById('friendsOffline');
-const regionNamesInEnglish = new Intl.DisplayNames(['en'], { type: 'region' })
+const regionNamesInEnglish = new Intl.DisplayNames(['en'], { type: 'region' });
+const recomContainer = document.getElementById('recomContainer');
 
 let divs = ['mostPlayed', 'myGames', 'recommended', 'friends'];
 let visibleId = 'mostPlayed';
@@ -42,7 +43,7 @@ let data = JSON.parse(request.responseText);
 
 request.open('GET', './data/myFriends.json', false);
 request.send(null);
-let friendsData = JSON.parse(request.responseText);
+let friendsData = mergeSort(JSON.parse(request.responseText), 'steamID');
 
 // JSON sorted data variables
 const names = mergeSort(playTimeData, 'name');
@@ -70,7 +71,7 @@ backArrow.addEventListener('click', function () {
             hideMainContent();
             showMyGames();
         } else if (visibleId === 'friends') {
-            if(friendContentClicked === true) {
+            if (friendContentClicked === true) {
                 while (friendsOffline.firstChild) {
                     friendsOffline.removeChild(friendsOffline.lastChild);
                 }
@@ -108,6 +109,11 @@ function show(id) {
             navMpClicked = false;
             navMyGamesClicked = false;
             navRecomClicked = false;
+        } else if (visibleId === 'recommended') {
+            navRecomClicked = true;
+            navFriendsClicked = false;
+            navMpClicked = false;
+            navMyGamesClicked = false;
         }
     }
     hide();
@@ -120,6 +126,9 @@ function show(id) {
     } else if (visibleId === 'friends') {
         hideMainContent();
         showFriends();
+    } else if (visibleId === 'recommended') {
+        hideMainContent();
+        showRecom();
     }
 }
 
@@ -214,6 +223,28 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
     }
 }
 
+// Function to fetch player counts for games in most played every 10 mins
+let mpGamesPlayerCounts = [];
+const updatempGamesPlayerCount = async () => {
+    if (mpGamesPlayerCounts.length !== 50) {
+        for (let i = 0; i < 50; i++) {
+            let app = playTimeData[i].appID;
+            let current = await currentPlayersOnline(app);
+            mpGamesPlayerCounts.push({
+                appID: app,
+                playersOn: current
+            });
+        } 
+    } else {
+        for (let i = 0; i < 50; i++) {
+            let app = playTimeData[i].appID;
+            let current = await currentPlayersOnline(app);
+            mpGamesPlayerCounts[i]['playersOn'] = current;
+        } 
+    }
+    setTimeout(updatempGamesPlayerCount, 1000 * 60 * 10);   
+}
+updatempGamesPlayerCount();
 // Function to dynamically add data to most played games maincontent
 const showMostPlayedGames = async () => {
     for (let i = 0; i < 50; i++) {
@@ -221,6 +252,7 @@ const showMostPlayedGames = async () => {
         if (navMyGamesClicked === true) return;
         if (navFriendsClicked === true) return;
         let platform = 0;
+        let current;
         for (const j in playTimeData[i].platforms) {
             if (playTimeData[i].platforms[j] === true) platform++;
         }
@@ -228,7 +260,8 @@ const showMostPlayedGames = async () => {
         let timePlayed = playTimeData[i].totalPlayTime;
         let imgSource = playTimeData[i].headerImage;
         let app = playTimeData[i].appID;
-        let current = await currentPlayersOnline(app);
+        if(mpGamesPlayerCounts.length !== 50) current = await currentPlayersOnline(app);
+        else current = mpGamesPlayerCounts[i].playersOn;
         if (navMyGamesClicked === true) return;
         if (navFriendsClicked === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
@@ -236,6 +269,28 @@ const showMostPlayedGames = async () => {
 };
 showMostPlayedGames();
 
+// Function to fetch player counts for games in my games every 10 mins
+let myGamesPlayerCounts = [];
+const updateMyGamesPlayerCount = async () => {
+    if(myGamesPlayerCounts.length !== totalPlaytime.length){
+        for(const i in totalPlaytime){
+            let app = totalPlaytime[i].appID;
+            let current = await currentPlayersOnline(app);
+            myGamesPlayerCounts.push({
+                appID: app,
+                playersOn: current
+            });
+        }  
+    } else {
+        for(const i in totalPlaytime){
+            let app = totalPlaytime[i].appID;
+            let current = await currentPlayersOnline(app);
+            myGamesPlayerCounts[i]['playersOn'] = current;
+        }  
+    }
+    setTimeout(updateMyGamesPlayerCount, 1000 * 60 * 10);
+}
+updateMyGamesPlayerCount();
 // Function to dynamically add data to my games maincontent
 const showMyGames = async () => {
     for (const i in totalPlaytime) {
@@ -243,6 +298,7 @@ const showMyGames = async () => {
         if (navMpClicked === true) return;
         if (navFriendsClicked === true) return;
         let platform = 0;
+        let current;
         for (const j in totalPlaytime[i].platforms) {
             if (totalPlaytime[i].platforms[j] === true) platform++;
         }
@@ -250,7 +306,8 @@ const showMyGames = async () => {
         let timePlayed = totalPlaytime[i].playTime;
         let imgSource = totalPlaytime[i].headerImage;
         let app = totalPlaytime[i].appID;
-        let current = await currentPlayersOnline(app);
+        if(myGamesPlayerCounts.length !== totalPlaytime.length) current = await currentPlayersOnline(app);
+        else current = myGamesPlayerCounts[i].playersOn;
         if (navMpClicked === true) return;
         if (navFriendsClicked === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
@@ -268,8 +325,8 @@ function hideMainContent() {
             myGamesContainer.removeChild(myGamesContainer.lastChild);
         }
     } else if (visibleId === 'friends') {
-        if(friendContentClicked === true){
-            friendsOnline.style.display = 'none'
+        if (friendContentClicked === true) {
+            friendsOnline.style.display = 'none';
         } else {
             while (friendsOnline.firstChild) {
                 friendsOnline.removeChild(friendsOnline.lastChild);
@@ -277,6 +334,10 @@ function hideMainContent() {
             while (friendsOffline.firstChild) {
                 friendsOffline.removeChild(friendsOffline.lastChild);
             }
+        }
+    } else if (visibleId === 'recommended') {
+        while (recomContainer.firstChild) {
+            recomContainer.removeChild(recomContainer.lastChild);
         }
     }
 }
@@ -307,7 +368,7 @@ const showGameDetails = async () => {
     let dotCount = 0;
     let screenshotsCount = 0;
     for (const i in gameInfo[0].screenshots) {
-        if(screenshotsCount === 20) break;
+        if (screenshotsCount === 20) break;
         let source = gameInfo[0].screenshots[i].path_thumbnail;
         const slideDiv = document.createElement('div');
         slideDiv.classList.add('mySlides');
@@ -436,13 +497,13 @@ const showGameDetails = async () => {
     gameStats.appendChild(innerGameStatsLeft);
 
     const innerGameStatsWrapOne = document.createElement('div');
-    const innerGameStatsWrapTwo= document.createElement('div');
+    const innerGameStatsWrapTwo = document.createElement('div');
     const innerGameStatsWrapThree = document.createElement('div');
     const innerGameStatsWrapFour = document.createElement('div');
-    innerGameStatsLeft.appendChild(innerGameStatsWrapOne)
-    innerGameStatsLeft.appendChild(innerGameStatsWrapTwo)
-    innerGameStatsLeft.appendChild(innerGameStatsWrapThree)
-    innerGameStatsLeft.appendChild(innerGameStatsWrapFour)
+    innerGameStatsLeft.appendChild(innerGameStatsWrapOne);
+    innerGameStatsLeft.appendChild(innerGameStatsWrapTwo);
+    innerGameStatsLeft.appendChild(innerGameStatsWrapThree);
+    innerGameStatsLeft.appendChild(innerGameStatsWrapFour);
 
     const gameStatsPlayTimeCount = document.createElement('div');
     const gameStatsPlayTimeCountText = document.createTextNode(`${Math.floor(clickedGameData.totalPlayTime / 60).toLocaleString()}`);
@@ -698,15 +759,25 @@ const appendFriends = async (name, img, state, friendID) => {
     }
 };
 
-// Function to fetch friend information and add them to array
+// Function to fetch friend online status every 2 mins
 let friendsList = [];
 const fetchFriends = async () => {
-    for (const i in friendsData) {
-        let friendID = friendsData[i];
-        let friend = await steam.getUserSummary(friendID.steamID);
-        friendsList.push(friend);
+    if (friendsList.length !== friendsData.length) {
+        for (const i in friendsData) {
+            let friendID = friendsData[i];
+            let friend = await steam.getUserSummary(friendID.steamID);
+            friendsList.push(friend);
+        }
+    } else {
+        friendsList = mergeSort(friendsList, 'steamID');
+        for (const i in friendsData) {
+            let friendID = friendsData[i];
+            let friend = await steam.getUserSummary(friendID.steamID);
+            friendsList[i]['personaState'] = friend.personaState;
+        }
     }
     friendsList = mergeSort(friendsList, 'personaState');
+    setTimeout(fetchFriends, 1000 * 60 * 2);
 };
 fetchFriends();
 
@@ -742,17 +813,17 @@ const showFriendDetails = async () => {
     friendsOnline.appendChild(friendDetailsCont);
 
     const friendDetailsInfo = document.createElement('div');
-    friendDetailsInfo.classList.add('friendDetailsInfoCont')
+    friendDetailsInfo.classList.add('friendDetailsInfoCont');
     friendDetailsCont.appendChild(friendDetailsInfo);
     const friendDetailsInfoRight = document.createElement('div');
     friendDetailsInfoRight.classList.add('friendDetailsInfoRight');
 
     const friendAvatar = document.createElement('img');
     friendAvatar.classList.add('friendDetailsAvatar');
-    if(state === 0) friendAvatar.classList.add('friendImageOffline');
+    if (state === 0) friendAvatar.classList.add('friendImageOffline');
     else friendAvatar.classList.add('friendImageOnline');
     friendAvatar.src = clickedProfileData.avatar.large;
-    friendDetailsInfo.appendChild(friendAvatar)
+    friendDetailsInfo.appendChild(friendAvatar);
 
     const friendNameCountryWrap = document.createElement('div');
     friendDetailsInfoRight.appendChild(friendNameCountryWrap);
@@ -762,14 +833,14 @@ const showFriendDetails = async () => {
     friendName.classList.add('friendDetailsName');
     friendNameCountryWrap.appendChild(friendName);
 
-    if(clickedProfileData.countryCode !== undefined) {
+    if (clickedProfileData.countryCode !== undefined) {
         const friendCountry = document.createElement('div');
         const friendCountryText = document.createTextNode(regionNamesInEnglish.of(clickedProfileData.countryCode));
         friendCountry.appendChild(friendCountryText);
         friendCountry.classList.add('friendDetailsCountry');
         friendNameCountryWrap.appendChild(friendCountry);
     }
-    
+
     const friendOnline = document.createElement('div');
     if (state === 0) friendOnlineText = document.createTextNode('Currently Offline');
     else friendOnlineText = document.createTextNode('Currently Online');
@@ -791,14 +862,14 @@ const showFriendDetails = async () => {
 
     const friendActualLevelWrap = document.createElement('div');
     friendActualLevelWrap.classList.add('friendLevelWrap');
-    if(userBadges.playerLevel >= 1 && userBadges.playerLevel < 10) friendActualLevelWrap.classList.add('friendLevelColorOne');
-    else if(userBadges.playerLevel >= 10 && userBadges.playerLevel < 20) friendActualLevelWrap.classList.add('friendLevelColorTwo');
-    else if(userBadges.playerLevel >= 20 && userBadges.playerLevel < 30) friendActualLevelWrap.classList.add('friendLevelColorThree');
-    else if(userBadges.playerLevel >= 30 && userBadges.playerLevel < 40) friendActualLevelWrap.classList.add('friendLevelColorFour');
-    else if(userBadges.playerLevel >= 40 && userBadges.playerLevel < 50) friendActualLevelWrap.classList.add('friendLevelColorFive');
-    else if(userBadges.playerLevel >= 50 && userBadges.playerLevel < 60) friendActualLevelWrap.classList.add('friendLevelColorSix');
-    else if(userBadges.playerLevel >= 60 && userBadges.playerLevel < 70) friendActualLevelWrap.classList.add('friendLevelColorSeven');
-    else if(userBadges.playerLevel >= 70 && userBadges.playerLevel < 80) friendActualLevelWrap.classList.add('friendLevelColorEight');
+    if (userBadges.playerLevel >= 1 && userBadges.playerLevel < 10) friendActualLevelWrap.classList.add('friendLevelColorOne');
+    else if (userBadges.playerLevel >= 10 && userBadges.playerLevel < 20) friendActualLevelWrap.classList.add('friendLevelColorTwo');
+    else if (userBadges.playerLevel >= 20 && userBadges.playerLevel < 30) friendActualLevelWrap.classList.add('friendLevelColorThree');
+    else if (userBadges.playerLevel >= 30 && userBadges.playerLevel < 40) friendActualLevelWrap.classList.add('friendLevelColorFour');
+    else if (userBadges.playerLevel >= 40 && userBadges.playerLevel < 50) friendActualLevelWrap.classList.add('friendLevelColorFive');
+    else if (userBadges.playerLevel >= 50 && userBadges.playerLevel < 60) friendActualLevelWrap.classList.add('friendLevelColorSix');
+    else if (userBadges.playerLevel >= 60 && userBadges.playerLevel < 70) friendActualLevelWrap.classList.add('friendLevelColorSeven');
+    else if (userBadges.playerLevel >= 70 && userBadges.playerLevel < 80) friendActualLevelWrap.classList.add('friendLevelColorEight');
     else friendActualLevelWrap.classList.add('friendLevelColorEight');
 
     const friendActualLevel = document.createElement('div');
@@ -816,32 +887,32 @@ const showFriendDetails = async () => {
     recentGamesTitleTextLeft.appendChild(recentGamesTitleText);
     recentGamesTitle.appendChild(recentGamesTitleTextLeft);
     let recentGamesPlayTime = 0;
-    if(userRecentGames.length > 0) {
-        for(const i in userRecentGames){
+    if (userRecentGames.length > 0) {
+        for (const i in userRecentGames) {
             let recentGame = userRecentGames[i];
             recentGamesPlayTime += recentGame.playTime2;
         }
-        const recentGamesTitlePlayTime = document.createTextNode(`${(recentGamesPlayTime / 60).toFixed(1)} hours past 2 weeks`)
-        recentGamesTitleTextRight.appendChild(recentGamesTitlePlayTime); 
+        const recentGamesTitlePlayTime = document.createTextNode(`${(recentGamesPlayTime / 60).toFixed(1)} hours past 2 weeks`);
+        recentGamesTitleTextRight.appendChild(recentGamesTitlePlayTime);
         recentGamesTitle.appendChild(recentGamesTitleTextRight);
         friendDetailsCont.appendChild(recentGamesTitle);
-        for(const j in userRecentGames){
-            let recentGame = userRecentGames[j]
-            const recentGameContainer = document.createElement('a')
+        for (const j in userRecentGames) {
+            let recentGame = userRecentGames[j];
+            const recentGameContainer = document.createElement('a');
             recentGameContainer.href = '#';
             recentGameContainer.classList.add('recentActivityContGames');
             const recentGameImg = document.createElement('img');
             recentGameImg.src = recentGame.logoURL;
             recentGameContainer.appendChild(recentGameImg);
             const recentGameTitle = document.createElement('div');
-            const recentGameTitleText = document.createTextNode(recentGame.name)
-            recentGameTitle.classList.add('recentActivityContGamesTitle')
+            const recentGameTitleText = document.createTextNode(recentGame.name);
+            recentGameTitle.classList.add('recentActivityContGamesTitle');
             recentGameTitle.appendChild(recentGameTitleText);
             recentGameContainer.appendChild(recentGameTitle);
-            const recentGamePlayTime = document.createElement('div')
+            const recentGamePlayTime = document.createElement('div');
             const recentGamePlayTimeText = document.createTextNode(`${(recentGame.playTime2 / 60).toFixed(1)} hrs on record`);
             recentGamePlayTime.appendChild(recentGamePlayTimeText);
-            recentGamePlayTime.classList.add('recentActivityContGamesTitle')
+            recentGamePlayTime.classList.add('recentActivityContGamesTitle');
             recentGameContainer.appendChild(recentGamePlayTime);
             recentGameContainer.setAttribute('data-appID', recentGame.appID);
             friendDetailsCont.appendChild(recentGameContainer);
@@ -856,7 +927,7 @@ const showFriendDetails = async () => {
                 friendContentClicked = true;
                 hideMainContent();
                 setTimeout(showGameDetails, 600);
-            })
+            });
         }
     } else {
         friendDetailsCont.appendChild(recentGamesTitle);
@@ -877,24 +948,24 @@ const showFriendDetails = async () => {
     const userOwnedGamesCont = document.createElement('div');
     userOwnedGamesCont.classList.add('userOwnedGamesCont');
     friendDetailsCont.appendChild(userOwnedGamesCont);
-    for(const i in friendOwnedGames){
+    for (const i in friendOwnedGames) {
         try {
             let ownedGame = friendOwnedGames[i];
-            const ownedGameContainer = document.createElement('a')
+            const ownedGameContainer = document.createElement('a');
             ownedGameContainer.href = '#';
             ownedGameContainer.classList.add('recentActivityContGames');
             const ownedGameImg = document.createElement('img');
             ownedGameImg.src = ownedGame.logoURL;
             ownedGameContainer.appendChild(ownedGameImg);
             const ownedGameTitle = document.createElement('div');
-            const ownedGameTitleText = document.createTextNode(ownedGame.name)
-            ownedGameTitle.classList.add('recentActivityContGamesTitle')
+            const ownedGameTitleText = document.createTextNode(ownedGame.name);
+            ownedGameTitle.classList.add('recentActivityContGamesTitle');
             ownedGameTitle.appendChild(ownedGameTitleText);
             ownedGameContainer.appendChild(ownedGameTitle);
-            const ownedGamePlayTime = document.createElement('div')
+            const ownedGamePlayTime = document.createElement('div');
             const ownedGamePlayTimeText = document.createTextNode(`${(ownedGame.playTime / 60).toFixed(1)} hrs on record`);
             ownedGamePlayTime.appendChild(ownedGamePlayTimeText);
-            ownedGamePlayTime.classList.add('recentActivityContGamesTitle')
+            ownedGamePlayTime.classList.add('recentActivityContGamesTitle');
             ownedGameContainer.appendChild(ownedGamePlayTime);
             ownedGameContainer.setAttribute('data-appID', ownedGame.appID);
             userOwnedGamesCont.appendChild(ownedGameContainer);
@@ -909,10 +980,19 @@ const showFriendDetails = async () => {
                 friendContentClicked = true;
                 hideMainContent();
                 setTimeout(showGameDetails, 600);
-            })
+            });
         } finally {
-            continue
+            continue;
         }
-    
     }
+};
+
+
+function showRecom () {
+    let spChar = String.fromCharCode(0x2122)
+    const comingSoon = document.createElement('div');
+    const comingSoonText = document.createTextNode(`COMING SOON ${spChar}`);
+    comingSoon.classList.add('recomText');
+    comingSoon.appendChild(comingSoonText);
+    recomContainer.appendChild(comingSoon);
 }
