@@ -1,5 +1,3 @@
-const steamapi = require('steamapi');
-
 // Variables
 const navContainer = document.getElementById('navContainer');
 const navElements = navContainer.getElementsByClassName('navElement');
@@ -37,7 +35,7 @@ let navRecomClicked = false;
 let navFriendsClicked = false;
 let friendContentClicked = false;
 
-// Load JSON file
+// Load JSON files
 request.open('GET', './data/myGames.json', false);
 request.send(null);
 let data = JSON.parse(request.responseText);
@@ -617,10 +615,12 @@ const showGameDetails = async () => {
 // Slider for game details functionality
 let slideIndex = 1;
 
+// Function to show slide that corresponds with dot
 function currentSlide(n) {
     showSlides((slideIndex = n));
 }
 
+// Function to make slideshow work in gamedetails
 function showSlides(n) {
     let i;
     let slides = document.getElementsByClassName('mySlides');
@@ -698,6 +698,7 @@ const appendFriends = async (name, img, state, friendID) => {
     }
 };
 
+// Function to fetch friend information and add them to array
 let friendsList = [];
 const fetchFriends = async () => {
     for (const i in friendsData) {
@@ -709,6 +710,7 @@ const fetchFriends = async () => {
 };
 fetchFriends();
 
+// Function to show all friends under friends tab
 const showFriends = async () => {
     const onlineText = document.createElement('div');
     const onlineTextText = document.createTextNode('Online Friends');
@@ -731,6 +733,7 @@ const showFriends = async () => {
     }
 };
 
+// Function to show details of friend in friends tab
 const showFriendDetails = async () => {
     let friendOnlineText;
     let state = clickedProfileData.personaState;

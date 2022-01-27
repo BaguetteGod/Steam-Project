@@ -1,3 +1,4 @@
+// Binary search algorithm
 function recBinarySearch(arr, x, string, start = 0, end = null) {
     if (end === null) end = arr.length - 1;
     // Base Condition
@@ -20,6 +21,7 @@ function recBinarySearch(arr, x, string, start = 0, end = null) {
 
 }
 
+// Binary search algorithm for appIDs
 function recBinarySearchID(arr, x, string = 'appID', start = 0, end = null) {
     if (end === null) end = arr.length - 1;
     // Base Condition

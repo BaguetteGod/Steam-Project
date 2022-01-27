@@ -1,3 +1,4 @@
+// Merge sort algorithm
 function mergeSort(arr, string) {
     let i, j, k;
     let arrCopy = Array.from(arr);
@@ -35,6 +36,7 @@ function mergeSort(arr, string) {
     return arrCopy;
 }
 
+// Selection sort algorithm
 function selectionSort(arr, string) {
     let arrCopy = Array.from(arr);
     for (let i = 0; i < arrCopy.length; i ++) {

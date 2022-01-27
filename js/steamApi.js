@@ -19,7 +19,50 @@ request.open('GET', './data/playTimeData.json', false);
 request.send(null);
 let playTimeData = JSON.parse(request.responseText);
 
-// Function to add own friend data to a json file
+// Function to get info for clicked games in most played and my games
+const getGameInfoById = async (id) => {
+    let infoArray = []
+    let reviews;
+    let url = `https://store.steampowered.com/appreviews/${id}?json=1&language=all`
+    const gameDet = await steam.getGameDetails(`${id}`);
+    infoArray.push({
+        appID: gameDet.steam_appid,
+        name: gameDet.name,
+        genres: gameDet.genres,
+        platforms: gameDet.platforms,
+        categories: gameDet.categories,
+        headerImage: gameDet.header_image,
+        developers: gameDet.developers,
+        publishers: gameDet.publishers,
+        description: gameDet.short_description,
+        releaseDate: gameDet.release_date,
+        background: gameDet.background,
+        screenshots: gameDet.screenshots
+    });
+    https.get(url,(res) => {
+        let body = '';
+    
+        res.on('data', (chunk) => {
+            body += chunk;
+        });
+        res.on('end', () => {
+            try {
+                reviews = JSON.parse(body);
+                infoArray[0]['reviewScore'] = reviews.query_summary.review_score_desc;
+                infoArray[0]['totalNegative'] = reviews.query_summary.total_negative;
+                infoArray[0]['totalPositive'] = reviews.query_summary.total_positive;
+                infoArray[0]['totalReviews'] = reviews.query_summary.total_reviews;
+            } catch (error) {
+                console.error(error.message);
+            };
+        });
+    }).on('error', (error) => {
+        console.error(error.message);
+    });
+    return infoArray;
+}
+
+// Function to add own friend data to a json file, not in use
 let myFriends = [];
 const friendsToJson = async () => {
     const friends = await steam.getUserFriends(mySteamID);
@@ -53,6 +96,7 @@ const friendsToJson = async () => {
     })
 }
 
+// Function to get own Owned games, not in use
 let myOwnedGames = [];
 const getOwnedGames = async () => {
     const ownedGames = mergeSort(await steam.getUserOwnedGames(mySteamID), 'playTime');
@@ -88,6 +132,7 @@ const getOwnedGames = async () => {
     })
 }
 
+// Function to get playtime data from users in steam, not in use
 let playTimeGame = [];
 const getplayTimeByID = async () => {
     let counter = 30999;
@@ -134,6 +179,7 @@ const getplayTimeByID = async () => {
     console.log('Done');
 }
 
+// Function to add addition info to top 50 most played games, not in use
 // let additionalInfo = mergeSort(playTimeData, 'totalPlayTime').reverse();
 const addGameInfoPlayTime = async () => {
     for(let i = 0; i < 101; i++){
@@ -156,6 +202,7 @@ const addGameInfoPlayTime = async () => {
     console.log(additionalInfo);
 }
 
+// Function to get own playtime for games, not in use
 getMyPlayTime = async () => {
     const ownedGames = await steam.getUserOwnedGames(mySteamID);
     for(const i in ownedGames){
@@ -176,6 +223,7 @@ getMyPlayTime = async () => {
     }) 
 }
 
+// Function to get a lot of steamIDs, not in use
 let steamIdArray = [];
 const getSteamIDs = async () => {
     const sortedData = mergeSort(idData, 'steamID');
@@ -213,46 +261,4 @@ const getSteamIDs = async () => {
         }
     })
     console.log(steamIdArray);
-}
-
-const getGameInfoById = async (id) => {
-    let infoArray = []
-    let reviews;
-    let url = `https://store.steampowered.com/appreviews/${id}?json=1&language=all`
-    const gameDet = await steam.getGameDetails(`${id}`);
-    infoArray.push({
-        appID: gameDet.steam_appid,
-        name: gameDet.name,
-        genres: gameDet.genres,
-        platforms: gameDet.platforms,
-        categories: gameDet.categories,
-        headerImage: gameDet.header_image,
-        developers: gameDet.developers,
-        publishers: gameDet.publishers,
-        description: gameDet.short_description,
-        releaseDate: gameDet.release_date,
-        background: gameDet.background,
-        screenshots: gameDet.screenshots
-    });
-    https.get(url,(res) => {
-        let body = '';
-    
-        res.on('data', (chunk) => {
-            body += chunk;
-        });
-        res.on('end', () => {
-            try {
-                reviews = JSON.parse(body);
-                infoArray[0]['reviewScore'] = reviews.query_summary.review_score_desc;
-                infoArray[0]['totalNegative'] = reviews.query_summary.total_negative;
-                infoArray[0]['totalPositive'] = reviews.query_summary.total_positive;
-                infoArray[0]['totalReviews'] = reviews.query_summary.total_reviews;
-            } catch (error) {
-                console.error(error.message);
-            };
-        });
-    }).on('error', (error) => {
-        console.error(error.message);
-    });
-    return infoArray;
 }
