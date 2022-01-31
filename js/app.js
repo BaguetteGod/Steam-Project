@@ -10,6 +10,8 @@ const friendsOnline = document.getElementById('friendsOnline');
 const friendsOffline = document.getElementById('friendsOffline');
 const regionNamesInEnglish = new Intl.DisplayNames(['en'], { type: 'region' });
 const recomContainer = document.getElementById('recomContainer');
+const searchInput = document.getElementById('searchInput');
+const searchButton = document.getElementById('searchButton');
 
 let divs = ['mostPlayed', 'myGames', 'recommended', 'friends'];
 let visibleId = 'mostPlayed';
@@ -87,6 +89,16 @@ backArrow.addEventListener('click', function () {
         return;
     }
 });
+
+searchInput.addEventListener('keyup', function (event) {
+    if(event.key === 'Enter') {
+        console.log(findGameByName(names, searchInput.value))
+    }
+})
+
+searchButton.addEventListener('click', function () {
+    console.log(findGameByName(names, searchInput.value));
+})
 
 // Function to show div within maincontent
 function show(id) {
@@ -291,6 +303,7 @@ const updateMyGamesPlayerCount = async () => {
     setTimeout(updateMyGamesPlayerCount, 1000 * 60 * 10);
 }
 updateMyGamesPlayerCount();
+
 // Function to dynamically add data to my games maincontent
 const showMyGames = async () => {
     for (const i in totalPlaytime) {
@@ -987,7 +1000,7 @@ const showFriendDetails = async () => {
     }
 };
 
-
+// Function to show recommended tab
 function showRecom () {
     let spChar = String.fromCharCode(0x2122)
     const comingSoon = document.createElement('div');
@@ -996,3 +1009,4 @@ function showRecom () {
     comingSoon.appendChild(comingSoonText);
     recomContainer.appendChild(comingSoon);
 }
+
