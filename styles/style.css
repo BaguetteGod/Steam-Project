@@ -252,8 +252,46 @@ footer {
 }
 
 /* END OF BASIC APP STYLING */
+/* SEARCHBAR STYLING */
+#searchContainer {
+    width: 99%;
+    position: fixed;
+    padding: 20px 30px 20px 30px;
+    background-color: #1b2838;
+    display: flex;
+}
+
+#searchInput {
+    border: none;
+    border-radius: 3px;
+    background: #16202d;
+    padding: 0.5rem;
+    outline: none;
+    color: #c7d5e0;
+    width: 500px;
+    margin-right: 0px;
+}
+
+#searchInput:focus{
+    border-color:#51c1ea;
+    box-shadow:0 0 8px 0 #51c1ea;
+}
+
+#searchButton {
+    border: none;
+    color: #c7d5e0;
+    background: #16202d;
+    height: 31px;
+    width: 31px;
+    border-radius: 3px;
+    padding: 0px;
+    margin-left: -35px;
+    outline: none;
+}
+
 /* CATEGORY CONTAINERS */
 #mpContainer {
+    top: 100px;
     margin: auto;
     padding: 30px 30px 20px 30px;
     display: flex;
@@ -302,6 +340,10 @@ footer {
     margin-bottom: 20px;
     flex-wrap: nowrap;
     width: 100%;
+}
+
+#mpContainer .gameContainer:first-of-type {
+    margin-top: 45px;
 }
 
 .textContainer {

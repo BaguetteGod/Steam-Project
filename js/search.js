@@ -62,27 +62,18 @@ function includesBinarySearch(arr, x, string = 'name', start = 0, end = null) {
 
 
 function findGameByName(arr, string) {
-    let namesArray = [];
-    let target = string.toLowerCase();
-    let obj = includesBinarySearch(arr, string);
-    if (obj !== false) {
-        namesArray.push(obj);
-        let indexOfObj = arr.indexOf(obj);
-        for (let i = 0; i < 20; i++) {
-            indexOfObj -= 1;
-            if (arr[indexOfObj]['name'].toLowerCase().includes(target)) {
-                namesArray.push(arr[indexOfObj]);
-            }
+    let target = string.split(" ")
+    let result = arr.filter(obj => {
+        let lowerCaseName = obj.name.toLowerCase()
+        return lowerCaseName.includes(target[0].toLowerCase());
+    })
+    if (target.length > 1) {
+        for (let i = 1; i < target.length; i++) {
+            result = result.filter(obj => {
+                let lowerCaseName = obj.name.toLowerCase()
+                return lowerCaseName.includes(target[i].toLowerCase());
+            })
         }
-        indexOfObj = arr.indexOf(obj);
-        for (let i = 0; i < 20; i++) {
-            indexOfObj += 1;
-            if (arr[indexOfObj]['name'].toLowerCase().includes(target)) {
-                namesArray.push(arr[indexOfObj]);
-            }
-        }
-        return namesArray;
-    } else {
-        return false;
     }
+    return mergeSort(result, 'totalPlayTime').reverse();
 }

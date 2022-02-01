@@ -10,6 +10,7 @@ const friendsOnline = document.getElementById('friendsOnline');
 const friendsOffline = document.getElementById('friendsOffline');
 const regionNamesInEnglish = new Intl.DisplayNames(['en'], { type: 'region' });
 const recomContainer = document.getElementById('recomContainer');
+const searchContainer = document.getElementById('searchContainer');
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
 
@@ -29,6 +30,7 @@ let priceText,
     userBadges,
     userLevel,
     userRecentGames,
+    foundGames,
     gameInfo;
 let histogramData = [];
 let contentClicked = false;
@@ -37,6 +39,8 @@ let navMyGamesClicked = false;
 let navRecomClicked = false;
 let navFriendsClicked = false;
 let friendContentClicked = false;
+let gameSearched = false;
+let backArrowClicked = false;
 
 // Load JSON files
 request.open('GET', './data/myGames.json', false);
@@ -64,11 +68,12 @@ for (let i = 0; i < navElements.length; i++) {
 
 // Event listener for the back arrow
 backArrow.addEventListener('click', function () {
-    if (contentClicked === true) {
+    if (contentClicked === true && gameSearched === false) {
         contentClicked = false;
         if (visibleId === 'mostPlayed') {
             hideMainContent();
             showMostPlayedGames();
+            searchContainer.style.display = 'flex';
         } else if (visibleId === 'myGames') {
             hideMainContent();
             showMyGames();
@@ -85,20 +90,94 @@ backArrow.addEventListener('click', function () {
                 showFriends();
             }
         }
+    } else if (gameSearched === true && contentClicked === false) {
+        backArrowClicked = true;
+        gameSearched = false;
+        hideMainContent();
+        showMostPlayedGames();
+        searchContainer.style.display = 'flex';
+    } else if (gameSearched === true && contentClicked === true) {
+        contentClicked = false;
+        hideMainContent();
+        showFoundGames();
+        searchContainer.style.display = 'flex';
     } else {
         return;
     }
 });
 
+// Event listener for search input
 searchInput.addEventListener('keyup', function (event) {
-    if(event.key === 'Enter') {
-        console.log(findGameByName(names, searchInput.value))
+    backArrowClicked = false;
+    if(event.key === 'Enter' && searchInput.value !== '') {
+        foundGames = findGameByName(names, searchInput.value);
+        gameSearched = true;
+        if(foundGames.length === 0) {
+            hideMainContent();
+            noGamesFound();
+        } else {
+            hideMainContent();
+            showFoundGames();
+        }
+        searchInput.value = '';
     }
 })
 
+// Event listener for search button
 searchButton.addEventListener('click', function () {
-    console.log(findGameByName(names, searchInput.value));
+    backArrowClicked = false;
+    if(searchInput.value !== '') {
+        foundGames = findGameByName(names, searchInput.value);
+        gameSearched = true;
+        if(foundGames.length === 0) {
+            hideMainContent();
+            noGamesFound();
+        } else {
+            hideMainContent();
+            showFoundGames();
+        }
+        searchInput.value = '';
+    }
 })
+
+// Function to show search results
+const showFoundGames = async () => {
+    for (const i in foundGames) {
+        if (contentClicked === true) return;
+        if (navMyGamesClicked === true) return;
+        if (navFriendsClicked === true) return;
+        if (backArrowClicked === true) return;
+        let platform = 0;
+        let foundGameData;
+        let current;
+        let imgSource;
+        let app = foundGames[i].appID;
+        let name = foundGames[i].name;
+        let timePlayed = foundGames[i].totalPlayTime;
+        try {
+            current = await currentPlayersOnline(app);
+            if (foundGames[i].headerImage === undefined) {
+                foundGameData = await steam.getGameDetails(app);
+                imgSource = foundGameData.header_image;
+                for (const j in foundGameData.platforms) {
+                    if (foundGameData.platforms[j] === true) platform++;
+                }
+            } else {
+                imgSource = foundGames[i].headerImage;
+                for (const j in foundGames[i].platforms) {
+                    if (foundGames[i].platforms[j] === true) platform++;
+                }
+            }
+            if (contentClicked === true) return;
+            if (navMyGamesClicked === true) return;
+            if (navFriendsClicked === true) return;
+            if (backArrowClicked === true) return;
+            addInfo(name, timePlayed, current, platform, imgSource);
+        } finally {
+            continue;
+        }
+    }
+};
 
 // Function to show div within maincontent
 function show(id) {
@@ -227,6 +306,7 @@ function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
         hideMainContent();
         setTimeout(showGameDetails, 600);
         contentClicked = true;
+        if(visibleId === 'mostPlayed') searchContainer.style.display = 'none';
     });
     if (visibleId === 'mostPlayed') {
         mpContainer.appendChild(newContainer);
@@ -257,12 +337,14 @@ const updatempGamesPlayerCount = async () => {
     setTimeout(updatempGamesPlayerCount, 1000 * 60 * 10);   
 }
 updatempGamesPlayerCount();
+
 // Function to dynamically add data to most played games maincontent
 const showMostPlayedGames = async () => {
     for (let i = 0; i < 50; i++) {
         if (contentClicked === true) return;
         if (navMyGamesClicked === true) return;
         if (navFriendsClicked === true) return;
+        if (gameSearched === true) return;
         let platform = 0;
         let current;
         for (const j in playTimeData[i].platforms) {
@@ -276,6 +358,7 @@ const showMostPlayedGames = async () => {
         else current = mpGamesPlayerCounts[i].playersOn;
         if (navMyGamesClicked === true) return;
         if (navFriendsClicked === true) return;
+        if (gameSearched === true) return;
         addInfo(name, timePlayed, current, platform, imgSource);
     }
 };
@@ -1010,3 +1093,11 @@ function showRecom () {
     recomContainer.appendChild(comingSoon);
 }
 
+// Function to show text when no games are found
+function noGamesFound () {
+    const nothingFound = document.createElement('div');
+    const nothingFoundText = document.createTextNode('NO GAMES FOUND');
+    nothingFound.appendChild(nothingFoundText);
+    nothingFound.classList.add('recomText');
+    mpContainer.appendChild(nothingFound);
+}
