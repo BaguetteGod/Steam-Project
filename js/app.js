@@ -195,16 +195,19 @@ function show(id) {
             navMpClicked = false;
             navRecomClicked = false;
             navFriendsClicked = false;
+            gameSearched = false;
         } else if (visibleId === 'friends') {
             navFriendsClicked = true;
             navMpClicked = false;
             navMyGamesClicked = false;
             navRecomClicked = false;
+            gameSearched = false;
         } else if (visibleId === 'recommended') {
             navRecomClicked = true;
             navFriendsClicked = false;
             navMpClicked = false;
             navMyGamesClicked = false;
+            gameSearched = false;
         }
     }
     hide();
