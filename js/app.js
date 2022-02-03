@@ -182,6 +182,7 @@ const showFoundGames = async () => {
 // Function to show div within maincontent
 function show(id) {
     contentClicked = false;
+    friendContentClicked = false;
     hideMainContent();
     if (visibleId !== id) {
         visibleId = id;
@@ -242,6 +243,7 @@ function hide() {
 
 // Functions to dynamically add data from JSON file to the maincontent section in most played
 function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
+    searchContainer.style.display = 'flex';
     if (contentClicked === true) return;
     const newContainer = document.createElement('a');
     newContainer.classList.add('gameContainer');
@@ -882,6 +884,7 @@ fetchFriends();
 
 // Function to show all friends under friends tab
 const showFriends = async () => {
+    friendsOnline.style.display = 'flex';
     const onlineText = document.createElement('div');
     const onlineTextText = document.createTextNode('Online Friends');
     onlineText.appendChild(onlineTextText);
