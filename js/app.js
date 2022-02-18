@@ -243,8 +243,8 @@ function hide() {
 
 // Functions to dynamically add data from JSON file to the maincontent section in most played
 function addInfo(name, playtime, currentOnline, platforms, imgSrc) {
-    searchContainer.style.display = 'flex';
     if (contentClicked === true) return;
+    searchContainer.style.display = 'flex';
     const newContainer = document.createElement('a');
     newContainer.classList.add('gameContainer');
     newContainer.href = '#';
